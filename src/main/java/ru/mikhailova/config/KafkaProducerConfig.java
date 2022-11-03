@@ -8,7 +8,6 @@ import org.springframework.kafka.core.ProducerFactory;
 
 @EnableKafka
 @Configuration
-//@EnableConfigurationProperties(KafkaProperties.class)
 public class KafkaProducerConfig {
 
     @Bean

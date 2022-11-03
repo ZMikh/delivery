@@ -10,7 +10,7 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic topic() {
-        return TopicBuilder.name("topic1")
+        return TopicBuilder.name("cancelMessage")
                 .build();
     }
 }
