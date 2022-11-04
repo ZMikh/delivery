@@ -43,11 +43,11 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Transactional
     @Override
-    public Delivery updateDeliveryById(Long id, UpdateDeliveryInfo updateDeliveryInfo) {
+    public Delivery updateDeliveryById(Long id, DeliveryUpdateInfo deliveryUpdateInfo) {
         Delivery delivery = repository.findById(id).orElseThrow();
-        delivery.setDeliveryTime(updateDeliveryInfo.getDeliveryTime());
-        delivery.setState(updateDeliveryInfo.getState());
-        delivery.setDescription(updateDeliveryInfo.getDescription());
+        delivery.setDeliveryTime(deliveryUpdateInfo.getDeliveryTime());
+        delivery.setState(deliveryUpdateInfo.getState());
+        delivery.setDescription(deliveryUpdateInfo.getDescription());
         repository.save(delivery);
         log.info("delivery with id: {} is updated", id);
         return delivery;
@@ -56,8 +56,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Transactional
     @Override
     public void deleteDeliveryById(Long id) {
-        Delivery delivery = repository.findById(id).orElseThrow();
-        repository.delete(delivery);
+        repository.deleteById(id);
         log.info("delivery with id: {} is deleted", id);
     }
 }

@@ -155,7 +155,7 @@
     </bpmn:intermediateThrowEvent>
     <bpmn:sequenceFlow id="Flow_0f1rfv9" sourceRef="errorPaymentStatus" targetRef="Gateway_0plqyy4" />
   </bpmn:process>
-  <bpmn:message id="Message_2b8iden" name="Message_2b8iden" />
+  <bpmn:message id="Message_2b8iden" name="cancel_message" />
   <bpmn:message id="Message_2puak2j" name="Message_2puak2j" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="delivery">

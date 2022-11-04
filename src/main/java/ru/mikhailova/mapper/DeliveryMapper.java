@@ -7,7 +7,7 @@ import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
-import ru.mikhailova.service.UpdateDeliveryInfo;
+import ru.mikhailova.service.DeliveryUpdateInfo;
 
 import static ru.mikhailova.domain.DeliveryState.NEW;
 
@@ -30,7 +30,7 @@ public class DeliveryMapper {
     public Delivery toEntity(DeliveryRequestCreateDto dto) {
         return mapper.map(dto, Delivery.class);
     }
-    public UpdateDeliveryInfo toEntity(DeliveryRequestUpdateDto dto) {
-        return mapper.map(dto, UpdateDeliveryInfo.class);
+    public DeliveryUpdateInfo toEntity(DeliveryRequestUpdateDto dto) {
+        return mapper.map(dto, DeliveryUpdateInfo.class);
     }
 }
