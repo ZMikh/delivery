@@ -6,3 +6,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9099
+    producer:
+      bootstrap-servers: localhost:9099

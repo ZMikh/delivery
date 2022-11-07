@@ -1,6 +1,7 @@
 package ru.mikhailova.service;
 
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.TaskService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ class DeliveryServiceImplTest {
     @Mock
     private RuntimeService runtimeService;
 
+    @Mock
+    private TaskService taskService;
+
     private DeliveryServiceImpl service;
 
     private Delivery delivery;
@@ -44,7 +48,7 @@ class DeliveryServiceImplTest {
                 .description("dish")
                 .build();
 
-        service = new DeliveryServiceImpl(repository, runtimeService);
+        service = new DeliveryServiceImpl(taskService, repository, runtimeService);
     }
 
     @AfterEach
@@ -81,14 +85,14 @@ class DeliveryServiceImplTest {
     void shouldUpdateDeliveryById() {
         when(repository.findById(any())).thenReturn(Optional.ofNullable(delivery));
         DeliveryUpdateInfo deliveryUpdateInfo = DeliveryUpdateInfo.builder()
-                .state(DeliveryState.IN_PROCESSING)
+                .deliveryTime(LocalDateTime.of(2022, 1, 1,1,1,1))
                 .build();
 
         service.updateDeliveryById(1L, deliveryUpdateInfo);
 
         verify(repository).save(argumentCaptor.capture());
         Delivery capturedDelivery = argumentCaptor.getValue();
-        assertThat(capturedDelivery.getState()).isEqualTo(deliveryUpdateInfo.getState());
+        assertThat(capturedDelivery.getDeliveryTime()).isEqualTo(deliveryUpdateInfo.getDeliveryTime());
     }
 
     @Test

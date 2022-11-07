@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.mikhailova.domain.DeliveryState;
 
 import java.time.LocalDateTime;
 
@@ -12,8 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ApiModel("Параметры для запроса по обновлению доставки")
 public class DeliveryRequestUpdateDto {
-    @ApiModelProperty("Статус доставки")
-    private DeliveryState state;
     @ApiModelProperty("Время доставки")
     private LocalDateTime deliveryTime;
     @ApiModelProperty("Описание доставки")

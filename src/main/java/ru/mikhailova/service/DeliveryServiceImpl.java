@@ -3,8 +3,11 @@ package ru.mikhailova.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.RuntimeService;
+import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.task.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mikhailova.domain.ConfirmState;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.repository.DeliveryRepository;
 
@@ -15,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DeliveryServiceImpl implements DeliveryService {
+    private final TaskService taskService;
     private final DeliveryRepository repository;
     private final RuntimeService runtimeService;
 
@@ -46,7 +50,6 @@ public class DeliveryServiceImpl implements DeliveryService {
     public Delivery updateDeliveryById(Long id, DeliveryUpdateInfo deliveryUpdateInfo) {
         Delivery delivery = repository.findById(id).orElseThrow();
         delivery.setDeliveryTime(deliveryUpdateInfo.getDeliveryTime());
-        delivery.setState(deliveryUpdateInfo.getState());
         delivery.setDescription(deliveryUpdateInfo.getDescription());
         repository.save(delivery);
         log.info("delivery with id: {} is updated", id);
@@ -58,5 +61,45 @@ public class DeliveryServiceImpl implements DeliveryService {
     public void deleteDeliveryById(Long id) {
         repository.deleteById(id);
         log.info("delivery with id: {} is deleted", id);
+    }
+
+    @Transactional
+    @Override
+    public Delivery confirmDelivery(Long id, DeliveryConfirm deliveryConfirm) {
+        Delivery delivery = repository.findById(id).orElseThrow();
+        repository.save(delivery);
+        log.info("delivery with id {} confirmed, address is updated", id);
+
+        Task task = taskService.createTaskQuery()
+                .taskDefinitionKey("taskConfirmation")
+                .processVariableValueEquals("id", delivery.getId())
+                .singleResult();
+        if (task == null) {
+            throw new RuntimeException();
+        }
+        taskService.setVariable(task.getId(), "isCancelled", deliveryConfirm.getState().equals(ConfirmState.CANCELLED));
+        taskService.setVariable(task.getId(), "isPickUp", deliveryConfirm.getIsPickUp());
+        taskService.complete(task.getId());
+
+        return delivery;
+    }
+
+    @Transactional
+    @Override
+    public Delivery pickUpDelivery(Long id) {
+        Delivery delivery = repository.findById(id).orElseThrow();
+        repository.save(delivery);
+        log.info("delivery with id {} picked-up by client", id);
+
+        Task task = taskService.createTaskQuery()
+                .taskDefinitionKey("taskPickUp")
+                .processVariableValueEquals("id", delivery.getId())
+                .singleResult();
+
+        if (task == null) {
+            throw new RuntimeException();
+        }
+        taskService.complete(task.getId());
+        return delivery;
     }
 }

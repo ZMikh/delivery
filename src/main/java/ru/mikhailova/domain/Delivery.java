@@ -35,4 +35,12 @@ public class Delivery {
      * Описание доставки
      */
     private String description;
+    /**
+     * Адрес доставки
+     */
+    private String address;
+    /**
+     * Получение заказа самовывозом
+     */
+    private Boolean isPickUp;
 }

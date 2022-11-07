@@ -4,19 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
-import ru.mikhailova.mapper.StateMapper;
-import ru.mikhailova.service.changeState.DeliveryChangeStateService;
 
 @Component
 @RequiredArgsConstructor
-public class StateChangeDelegate implements JavaDelegate {
-    private final DeliveryChangeStateService service;
-    private final StateMapper mapper;
-
+public class CompensationDelegate implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         Long id = (Long) delegateExecution.getVariable("id");
-        String activityInstanceId = delegateExecution.getCurrentActivityId();
-        service.changeDeliveryState(mapper.getStateByActivityId(activityInstanceId), id);
     }
 }

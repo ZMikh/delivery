@@ -3,7 +3,6 @@ package ru.mikhailova.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import ru.mikhailova.domain.DeliveryState;
 
 import java.time.LocalDateTime;
 
@@ -13,9 +12,13 @@ public class DeliveryResponseDto {
     @ApiModelProperty("Идентификатор доставки")
     private Long id;
     @ApiModelProperty("Статус доставки")
-    private DeliveryState state;
+    private String state;
     @ApiModelProperty("Время доставки")
     private LocalDateTime deliveryTime;
     @ApiModelProperty("Описание доставки")
     private String description;
+    @ApiModelProperty("Адрес доставки")
+    private String address;
+    @ApiModelProperty("Получение доставки самовывозом")
+    private Boolean isPickUp;
 }

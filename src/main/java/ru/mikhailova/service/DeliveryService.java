@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface DeliveryService {
     /**
-     * Создать доставки
+     * Создать доставку
      *
      * @param delivery сущность Доставка
      * @return сущность Доставка
@@ -17,7 +17,7 @@ public interface DeliveryService {
     Delivery createDelivery(Delivery delivery);
 
     /**
-     * Получить доставки по идентификатору доставки
+     * Получить доставку по идентификатору доставки
      *
      * @param id идентификатор доставки
      * @return сущность Доставка
@@ -25,14 +25,14 @@ public interface DeliveryService {
     Delivery getDeliveryById(Long id);
 
     /**
-     * Получить все доставок
+     * Получить все доставки
      *
      * @return список доставок
      */
     List<Delivery> getAllDeliveries();
 
     /**
-     * Обновить параметры доставки
+     * Обновить параметры доставки по идентификатору доставки
      *
      * @param id идентификатор доставки
      * @param deliveryUpdateInfo обновленные параметры доставки
@@ -46,4 +46,18 @@ public interface DeliveryService {
      * @param id идентификатор доставки
      */
     void deleteDeliveryById(Long id);
+    /**
+     * Подтвердить заказ-доставку по идентификатору доставки
+     *
+     * @param id идентификатор доставки
+     * @return сущность Доставка
+     */
+    Delivery confirmDelivery(Long id, DeliveryConfirm deliveryConfirm);
+    /**
+     * Выдать клиенту заказ самовывозом по идентификатору доставки
+     *
+     * @param id идентификатор доставки
+     * @return сущность Доставка
+     */
+    Delivery pickUpDelivery(Long id);
 }

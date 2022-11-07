@@ -4,10 +4,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.mikhailova.domain.Delivery;
+import ru.mikhailova.dto.DeliveryRequestConfirmDto;
 import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
 import ru.mikhailova.mapper.DeliveryMapper;
+import ru.mikhailova.service.DeliveryConfirm;
 import ru.mikhailova.service.DeliveryService;
 import ru.mikhailova.service.DeliveryUpdateInfo;
 
@@ -24,15 +26,15 @@ public class DeliveryController {
     @PostMapping("/create")
     @ApiOperation("Создание доставки")
     public DeliveryResponseDto create(@RequestBody DeliveryRequestCreateDto deliveryRequestCreateDto) {
-        Delivery delivery = service.createDelivery(mapper.toEntity(deliveryRequestCreateDto));
-        return mapper.toDto(delivery);
+        Delivery delivery = service.createDelivery(mapper.toDelivery(deliveryRequestCreateDto));
+        return mapper.toDeliveryResponseDto(delivery);
     }
 
     @GetMapping("/get/{id}")
     @ApiOperation("Получение доставки по идентификатору доставки")
     public DeliveryResponseDto getById(@PathVariable Long id) {
         Delivery delivery = service.getDeliveryById(id);
-        return mapper.toDto(delivery);
+        return mapper.toDeliveryResponseDto(delivery);
     }
 
     @GetMapping("/get-all")
@@ -40,7 +42,7 @@ public class DeliveryController {
     public List<DeliveryResponseDto> getAll() {
         List<Delivery> deliveries = service.getAllDeliveries();
         return deliveries.stream()
-                .map(mapper::toDto)
+                .map(mapper::toDeliveryResponseDto)
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +55,20 @@ public class DeliveryController {
     @PutMapping("/update/{id}")
     @ApiOperation("Обновление параметров доставки по идентификатору")
     public DeliveryResponseDto updateById(@PathVariable Long id, @RequestBody DeliveryRequestUpdateDto dto) {
-        DeliveryUpdateInfo deliveryUpdateInfo = mapper.toEntity(dto);
-        return mapper.toDto(service.updateDeliveryById(id, deliveryUpdateInfo));
+        DeliveryUpdateInfo deliveryUpdateInfo = mapper.toDeliveryUpdateInfo(dto);
+        return mapper.toDeliveryResponseDto(service.updateDeliveryById(id, deliveryUpdateInfo));
+    }
+
+    @PostMapping("/confirm/{id}")
+    @ApiOperation("Подтверждение заказа")
+    public DeliveryResponseDto confirm(@PathVariable Long id, @RequestBody DeliveryRequestConfirmDto dto) {
+        DeliveryConfirm deliveryConfirm = mapper.toDeliveryConfirm(dto);
+        return mapper.toDeliveryResponseDto(service.confirmDelivery(id, deliveryConfirm));
+    }
+
+    @PostMapping("/pick-up/{id}")
+    @ApiOperation("Выдача заказа клиенту самовывозом")
+    public DeliveryResponseDto pickUp(@PathVariable Long id) {
+        return mapper.toDeliveryResponseDto(service.pickUpDelivery(id));
     }
 }
