@@ -8,7 +8,7 @@ import ru.mikhailova.dto.DeliveryRequestConfirmDto;
 import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
-import ru.mikhailova.service.DeliveryConfirm;
+import ru.mikhailova.service.DeliveryConfirmInfo;
 import ru.mikhailova.service.DeliveryUpdateInfo;
 
 import static ru.mikhailova.domain.DeliveryState.NEW;
@@ -36,7 +36,7 @@ public class DeliveryMapper {
         return mapper.map(dto, DeliveryUpdateInfo.class);
     }
 
-    public DeliveryConfirm toDeliveryConfirm(DeliveryRequestConfirmDto dto) {
-        return mapper.map(dto, DeliveryConfirm.class);
+    public DeliveryConfirmInfo toDeliveryConfirm(DeliveryRequestConfirmDto dto) {
+        return mapper.map(dto, DeliveryConfirmInfo.class);
     }
 }

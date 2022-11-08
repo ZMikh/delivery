@@ -9,7 +9,7 @@ import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
 import ru.mikhailova.mapper.DeliveryMapper;
-import ru.mikhailova.service.DeliveryConfirm;
+import ru.mikhailova.service.DeliveryConfirmInfo;
 import ru.mikhailova.service.DeliveryService;
 import ru.mikhailova.service.DeliveryUpdateInfo;
 
@@ -62,8 +62,8 @@ public class DeliveryController {
     @PostMapping("/confirm/{id}")
     @ApiOperation("Подтверждение заказа")
     public DeliveryResponseDto confirm(@PathVariable Long id, @RequestBody DeliveryRequestConfirmDto dto) {
-        DeliveryConfirm deliveryConfirm = mapper.toDeliveryConfirm(dto);
-        return mapper.toDeliveryResponseDto(service.confirmDelivery(id, deliveryConfirm));
+        DeliveryConfirmInfo deliveryConfirmInfo = mapper.toDeliveryConfirm(dto);
+        return mapper.toDeliveryResponseDto(service.confirmDelivery(id, deliveryConfirmInfo));
     }
 
     @PostMapping("/pick-up/{id}")

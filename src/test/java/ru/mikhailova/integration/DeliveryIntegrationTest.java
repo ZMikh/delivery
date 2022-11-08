@@ -3,7 +3,6 @@ package ru.mikhailova.integration;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -15,6 +14,7 @@ import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
 import ru.mikhailova.repository.DeliveryRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,13 +53,36 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     void couldCheckDeliveryConfirmationUserTask() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
         dto.setState("CONFIRMED");
+
         DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
+
         assertThat(responseDto.getState()).isEqualTo(DeliveryState.PAID.toString());
     }
 
     @Test
-    void couldGetDeliveryById() throws Exception {
+    void couldCheckDeliveryCancellationUserTask() throws Exception {
+        DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
+        dto.setState("CANCELLED");
 
+        DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
+
+        assertThat(responseDto.getState()).isEqualTo(DeliveryState.CLIENT_CANCELLATION.toString());
+    }
+
+    @Test
+    void couldCheckDeliveryIsPickedUpUserTask() throws Exception {
+        DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
+        dto.setState("CONFIRMED");
+        dto.setIsPickUp(true);
+        performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
+
+
+        DeliveryResponseDto responseDto = performPickUpDelivery(delivery.getId(), DeliveryResponseDto.class);
+        assertThat(responseDto.getState()).isEqualTo(DeliveryState.RECEIVED.toString());
+    }
+
+    @Test
+    void couldGetDeliveryById() throws Exception {
         DeliveryResponseDto dto = performGetDeliveryById(delivery.getId(), DeliveryResponseDto.class);
 
         assertThat(dto.getDescription()).isEqualTo("dish");
@@ -79,15 +102,13 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
         assertThat(dtoList.size()).isNotZero();
     }
 
-
-
     @Test
-    @Disabled
     void couldUpdateDeliveryById() throws Exception {
         DeliveryRequestUpdateDto dto = new DeliveryRequestUpdateDto();
+        dto.setDeliveryTime(LocalDateTime.of(2030, 1, 1, 1, 1, 1));
 
         DeliveryResponseDto responseDto = performUpdateDeliveryById(delivery.getId(), dto, DeliveryResponseDto.class);
 
-        assertThat(responseDto.getState()).isEqualTo(DeliveryState.PAID);
+        assertThat(responseDto.getDeliveryTime()).isEqualTo(LocalDateTime.of(2030, 1, 1, 1, 1, 1));
     }
 }

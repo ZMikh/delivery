@@ -65,10 +65,12 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Transactional
     @Override
-    public Delivery confirmDelivery(Long id, DeliveryConfirm deliveryConfirm) {
+    public Delivery confirmDelivery(Long id, DeliveryConfirmInfo deliveryConfirmInfo) {
         Delivery delivery = repository.findById(id).orElseThrow();
+        delivery.setDeliveryTime(deliveryConfirmInfo.getDeliveryTime());
+        delivery.setIsPickUp(deliveryConfirmInfo.getIsPickUp());
         repository.save(delivery);
-        log.info("delivery with id {} confirmed, address is updated", id);
+        log.info("delivery with id {} confirmed", id);
 
         Task task = taskService.createTaskQuery()
                 .taskDefinitionKey("taskConfirmation")
@@ -77,8 +79,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (task == null) {
             throw new RuntimeException();
         }
-        taskService.setVariable(task.getId(), "isCancelled", deliveryConfirm.getState().equals(ConfirmState.CANCELLED));
-        taskService.setVariable(task.getId(), "isPickUp", deliveryConfirm.getIsPickUp());
+        taskService.setVariable(task.getId(), "isCancelled", deliveryConfirmInfo.getState().equals(ConfirmState.CANCELLED));
+        taskService.setVariable(task.getId(), "isPickUp", deliveryConfirmInfo.getIsPickUp());
         taskService.complete(task.getId());
 
         return delivery;
@@ -88,8 +90,6 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public Delivery pickUpDelivery(Long id) {
         Delivery delivery = repository.findById(id).orElseThrow();
-        repository.save(delivery);
-        log.info("delivery with id {} picked-up by client", id);
 
         Task task = taskService.createTaskQuery()
                 .taskDefinitionKey("taskPickUp")
@@ -100,6 +100,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new RuntimeException();
         }
         taskService.complete(task.getId());
+        log.info("delivery with id {} picked-up by client", id);
         return delivery;
     }
 }

@@ -52,7 +52,7 @@ public interface DeliveryService {
      * @param id идентификатор доставки
      * @return сущность Доставка
      */
-    Delivery confirmDelivery(Long id, DeliveryConfirm deliveryConfirm);
+    Delivery confirmDelivery(Long id, DeliveryConfirmInfo deliveryConfirmInfo);
     /**
      * Выдать клиенту заказ самовывозом по идентификатору доставки
      *

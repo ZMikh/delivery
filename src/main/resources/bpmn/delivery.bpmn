@@ -63,7 +63,7 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1essd0v" sourceRef="Activity_09kksu5" targetRef="notificationSentState" />
     <bpmn:sequenceFlow id="Flow_0sgm0on" sourceRef="taskConfirmation" targetRef="clientCancellationState">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${false}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isCancelled == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:endEvent id="clientCancellationState" name="Клиент отменил заказ">
       <bpmn:extensionElements>
@@ -108,7 +108,7 @@
       <bpmn:outgoing>Flow_0fcz8zj</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:sequenceFlow id="Flow_1hg760q" sourceRef="Gateway_003ua1y" targetRef="taskPickUp">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${true}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isPickUp == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:userTask id="taskPickUp" name="Заказ выдан клиенту самовывозом">
       <bpmn:incoming>Flow_1hg760q</bpmn:incoming>
@@ -120,7 +120,7 @@
       <bpmn:incoming>Flow_0fcz8zj</bpmn:incoming>
       <bpmn:outgoing>Flow_141bve7</bpmn:outgoing>
     </bpmn:receiveTask>
-    <bpmn:subProcess id="Activity_0s30hyi">
+    <bpmn:subProcess id="Activity_0s30hyi" camunda:asyncBefore="true">
       <bpmn:extensionElements />
       <bpmn:incoming>Flow_1m22jty</bpmn:incoming>
       <bpmn:outgoing>Flow_0t289i1</bpmn:outgoing>
@@ -136,7 +136,7 @@
     <bpmn:boundaryEvent id="Event_179vcnv" attachedToRef="Activity_0s30hyi">
       <bpmn:outgoing>Flow_1prjwer</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_1qj8ltt">
-        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT1D</bpmn:timeDuration>
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT24H</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_1prjwer" sourceRef="Event_179vcnv" targetRef="noFeedbackState" />
@@ -227,9 +227,9 @@
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ivtuig_di" bpmnElement="notificationSentState">
-        <dc:Bounds x="872" y="392" width="36" height="36" />
+        <dc:Bounds x="882" y="392" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="855" y="354.5" width="69" height="27" />
+          <dc:Bounds x="865" y="354.5" width="69" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_05amvso_di" bpmnElement="clientCancellationState">
@@ -369,9 +369,8 @@
         <di:waypoint x="710" y="410" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1essd0v_di" bpmnElement="Flow_1essd0v">
-        <di:waypoint x="810" y="440" />
-        <di:waypoint x="890" y="440" />
-        <di:waypoint x="890" y="428" />
+        <di:waypoint x="810" y="410" />
+        <di:waypoint x="882" y="410" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0sgm0on_di" bpmnElement="Flow_0sgm0on">
         <di:waypoint x="600" y="317" />

@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -19,9 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WebAppConfiguration
 @EmbeddedKafka(brokerProperties = {
-        "listeners=PLAINTEXT://localhost:9092",
-        "port=9092"
+        "listeners=PLAINTEXT://localhost:9099",
+        "port=9099"
 })
+@ActiveProfiles(value = "test")
 public abstract class AbstractIntegrationTest {
     @Autowired
     ObjectMapper objectMapper;
@@ -77,6 +79,15 @@ public abstract class AbstractIntegrationTest {
         ResultActions resultActions = mockMvc.perform(post(url + "/confirm/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), response);
+    }
+
+    protected <T> T performPickUpDelivery(Long id, Class<T> response) throws Exception {
+        ResultActions resultActions = mockMvc.perform(post(url + "/pick-up/" + id)
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
 
