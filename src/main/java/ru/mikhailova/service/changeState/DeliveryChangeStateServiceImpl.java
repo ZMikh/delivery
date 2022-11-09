@@ -1,13 +1,13 @@
 package ru.mikhailova.service.changeState;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
 import ru.mikhailova.repository.DeliveryRepository;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class DeliveryChangeStateServiceImpl implements DeliveryChangeStateService {
     private final DeliveryRepository repository;

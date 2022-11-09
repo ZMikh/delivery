@@ -22,5 +22,4 @@ public class StateMapper {
     public DeliveryState getStateByActivityId(String activityId) {
         return map.get(activityId);
     }
-
 }

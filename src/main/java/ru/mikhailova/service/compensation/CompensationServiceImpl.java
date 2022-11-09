@@ -1,10 +1,10 @@
 package ru.mikhailova.service.compensation;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.mikhailova.repository.DeliveryRepository;
-
-@Component
+//TODO service
+@Service
 @RequiredArgsConstructor
 public class CompensationServiceImpl implements CompensationService {
     private final DeliveryRepository repository;

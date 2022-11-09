@@ -55,7 +55,7 @@
     <bpmn:boundaryEvent id="Event_1v5yib7" cancelActivity="false" attachedToRef="taskConfirmation">
       <bpmn:outgoing>Flow_03y2roq</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_008w9db">
-        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R3/PT1M</bpmn:timeCycle>
+        <bpmn:timeCycle xsi:type="bpmn:tFormalExpression">R3/PT10S</bpmn:timeCycle>
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:endEvent id="notificationSentState" name="Уведомление отправлено">

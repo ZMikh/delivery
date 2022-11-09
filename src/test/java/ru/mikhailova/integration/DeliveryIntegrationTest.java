@@ -1,17 +1,23 @@
 package ru.mikhailova.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
 import ru.mikhailova.dto.DeliveryRequestConfirmDto;
 import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
+import ru.mikhailova.listener.DeliveryMessageDto;
 import ru.mikhailova.repository.DeliveryRepository;
 
 import java.time.LocalDateTime;
@@ -25,11 +31,14 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
-
+    @Autowired
+    private ConsumerFactory<String, JsonNode> consumerFactory;
     private Delivery delivery;
 
     private TypeReference<List<DeliveryResponseDto>> listTypeReference = new TypeReference<List<DeliveryResponseDto>>() {
     };
+
+    JsonNode value;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -45,8 +54,42 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void couldCreateDelivery() throws Exception {
+    void couldCreateDelivery() {
         assertThat(delivery.getState()).isEqualTo(DeliveryState.IN_PROCESSING);
+    }
+
+    @Test
+    void couldCheckSendNotificationDelivery() throws Exception {
+        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
+            consumer.subscribe(List.of("notification"));
+            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, "notification", 20000);
+            value = record.value();
+        }
+
+        assertThat(value).isNotEmpty();
+    }
+
+    @Test
+    void couldCheckSendDeliveryInformation() throws Exception {
+        DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
+        dto.setState("CONFIRMED");
+        dto.setIsPickUp(false);
+
+        performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
+
+        DeliveryMessageDto deliveryMessageDto = new DeliveryMessageDto();
+        deliveryMessageDto.setId(delivery.getId());
+
+        kafkaTemplate.send("deliveryInformation", deliveryMessageDto);
+
+
+        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
+            consumer.subscribe(List.of("deliveryInformation"));
+            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, "deliveryInformation", 20000);
+            value = record.value();
+        }
+
+        assertThat(value).isNotEmpty();
     }
 
     @Test
@@ -79,6 +122,18 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
 
         DeliveryResponseDto responseDto = performPickUpDelivery(delivery.getId(), DeliveryResponseDto.class);
         assertThat(responseDto.getState()).isEqualTo(DeliveryState.RECEIVED.toString());
+    }
+
+    @Test
+    void checkCompensationServiceTaskTechErrorState() throws Exception {
+        DeliveryMessageDto deliveryMessageDto = new DeliveryMessageDto();
+        deliveryMessageDto.setId(delivery.getId());
+
+        kafkaTemplate.send("cancelMessage", deliveryMessageDto);
+        Thread.sleep(1000);
+        Delivery cancelledDelivery = repository.findById(delivery.getId()).orElseThrow();
+
+        assertThat(cancelledDelivery.getState()).isEqualTo(DeliveryState.TECH_ERROR);
     }
 
     @Test

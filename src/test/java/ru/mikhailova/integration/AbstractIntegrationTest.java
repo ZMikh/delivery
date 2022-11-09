@@ -54,6 +54,7 @@ public abstract class AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+
         return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), response);
     }
 
@@ -62,6 +63,7 @@ public abstract class AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+
         return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), response);
     }
 
