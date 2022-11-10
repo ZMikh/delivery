@@ -9,9 +9,9 @@ import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
 import ru.mikhailova.mapper.DeliveryMapper;
-import ru.mikhailova.service.DeliveryConfirmInfo;
-import ru.mikhailova.service.DeliveryService;
-import ru.mikhailova.service.DeliveryUpdateInfo;
+import ru.mikhailova.service.userTask.DeliveryConfirmInfo;
+import ru.mikhailova.service.userTask.DeliveryService;
+import ru.mikhailova.service.userTask.DeliveryUpdateInfo;
 
 import java.util.List;
 import java.util.stream.Collectors;

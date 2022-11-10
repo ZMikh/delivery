@@ -43,4 +43,9 @@ public class Delivery {
      * Получение заказа самовывозом
      */
     private Boolean isPickUp;
+    /**
+     * Оуенка сервиса
+     */
+    @Enumerated(value = EnumType.ORDINAL)
+    private Feedback feedback;
 }

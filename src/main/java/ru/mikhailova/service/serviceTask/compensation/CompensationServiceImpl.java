@@ -1,4 +1,4 @@
-package ru.mikhailova.service.compensation;
+package ru.mikhailova.service.serviceTask.compensation;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

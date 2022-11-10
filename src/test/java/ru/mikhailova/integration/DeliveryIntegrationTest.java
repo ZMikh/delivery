@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.producer.Producer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
@@ -33,12 +36,14 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     private KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
     private ConsumerFactory<String, JsonNode> consumerFactory;
+
+    @Autowired
+    private ProducerFactory<String, JsonNode> producerFactory;
+
     private Delivery delivery;
 
     private TypeReference<List<DeliveryResponseDto>> listTypeReference = new TypeReference<List<DeliveryResponseDto>>() {
     };
-
-    JsonNode value;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -63,33 +68,8 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
         try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
             consumer.subscribe(List.of("notification"));
             ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, "notification", 20000);
-            value = record.value();
+            assertThat(record.value()).isNotEmpty();
         }
-
-        assertThat(value).isNotEmpty();
-    }
-
-    @Test
-    void couldCheckSendDeliveryInformation() throws Exception {
-        DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState("CONFIRMED");
-        dto.setIsPickUp(false);
-
-        performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
-
-        DeliveryMessageDto deliveryMessageDto = new DeliveryMessageDto();
-        deliveryMessageDto.setId(delivery.getId());
-
-        kafkaTemplate.send("deliveryInformation", deliveryMessageDto);
-
-
-        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
-            consumer.subscribe(List.of("deliveryInformation"));
-            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, "deliveryInformation", 20000);
-            value = record.value();
-        }
-
-        assertThat(value).isNotEmpty();
     }
 
     @Test
@@ -165,5 +145,34 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
         DeliveryResponseDto responseDto = performUpdateDeliveryById(delivery.getId(), dto, DeliveryResponseDto.class);
 
         assertThat(responseDto.getDeliveryTime()).isEqualTo(LocalDateTime.of(2030, 1, 1, 1, 1, 1));
+    }
+
+    @Test
+    void couldCheckSendDeliveryInformation() throws Exception {
+        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
+            consumer.subscribe(List.of("deliveryInformation"));
+
+            DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
+            dto.setState("CONFIRMED");
+            dto.setIsPickUp(false);
+
+            performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
+
+            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, "deliveryInformation", 2000);
+            assertThat(record.value()).isNotEmpty();
+        }
+    }
+    //TODO receiveTaskTest
+    @Test
+    @Disabled
+    void couldCheckReceiveMessageOfDeliveryFinish() throws Exception {
+        DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
+        dto.setState("CONFIRMED");
+        dto.setIsPickUp(false);
+
+        performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
+
+        Producer<String, JsonNode> producer = producerFactory.createProducer();
+
     }
 }

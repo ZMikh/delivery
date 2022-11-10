@@ -8,8 +8,8 @@ import ru.mikhailova.dto.DeliveryRequestConfirmDto;
 import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
-import ru.mikhailova.service.DeliveryConfirmInfo;
-import ru.mikhailova.service.DeliveryUpdateInfo;
+import ru.mikhailova.service.userTask.DeliveryConfirmInfo;
+import ru.mikhailova.service.userTask.DeliveryUpdateInfo;
 
 import static ru.mikhailova.domain.DeliveryState.NEW;
 

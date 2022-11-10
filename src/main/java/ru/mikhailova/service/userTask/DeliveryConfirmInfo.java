@@ -1,4 +1,4 @@
-package ru.mikhailova.service;
+package ru.mikhailova.service.userTask;
 
 import lombok.Data;
 import ru.mikhailova.domain.ConfirmState;

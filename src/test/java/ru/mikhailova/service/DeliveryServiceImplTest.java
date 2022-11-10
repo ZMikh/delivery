@@ -13,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
 import ru.mikhailova.repository.DeliveryRepository;
+import ru.mikhailova.service.userTask.DeliveryServiceImpl;
+import ru.mikhailova.service.userTask.DeliveryUpdateInfo;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

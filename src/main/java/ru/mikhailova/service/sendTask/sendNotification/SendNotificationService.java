@@ -1,4 +1,4 @@
-package ru.mikhailova.service.sendNotification;
+package ru.mikhailova.service.sendTask.sendNotification;
 
 public interface SendNotificationService {
     void sendNotification(Long id);

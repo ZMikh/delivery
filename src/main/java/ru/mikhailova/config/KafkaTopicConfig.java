@@ -9,8 +9,14 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic topic() {
+    public NewTopic cancelMessageTopic() {
         return TopicBuilder.name("cancelMessage")
+                .build();
+    }
+
+    @Bean
+    public NewTopic deliveryFinishTopic() {
+        return TopicBuilder.name("deliveryFinishMessage")
                 .build();
     }
 }

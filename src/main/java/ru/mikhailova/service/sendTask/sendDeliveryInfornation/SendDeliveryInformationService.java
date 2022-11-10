@@ -1,4 +1,4 @@
-package ru.mikhailova.service.sendDeliveryInfornation;
+package ru.mikhailova.service.sendTask.sendDeliveryInfornation;
 
 public interface SendDeliveryInformationService {
     void sendDeliveryInformation(Long id);

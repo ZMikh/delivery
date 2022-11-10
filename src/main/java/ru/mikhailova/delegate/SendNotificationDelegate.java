@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
-import ru.mikhailova.service.sendNotification.SendNotificationService;
+import ru.mikhailova.service.sendTask.sendNotification.SendNotificationService;
 
 @Component
 @RequiredArgsConstructor

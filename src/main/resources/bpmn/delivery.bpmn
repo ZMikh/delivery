@@ -116,7 +116,7 @@
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_18d4fa6" sourceRef="taskPickUp" targetRef="Gateway_0o8kjwb" />
     <bpmn:sequenceFlow id="Flow_141bve7" sourceRef="Activity_0hhjx1y" targetRef="Gateway_0o8kjwb" />
-    <bpmn:receiveTask id="Activity_0hhjx1y" name="Получена информация о завершении доставки" messageRef="Message_2puak2j">
+    <bpmn:receiveTask id="Activity_0hhjx1y" name="Получена информация о завершении доставки" messageRef="Message_0edgn9c">
       <bpmn:incoming>Flow_0fcz8zj</bpmn:incoming>
       <bpmn:outgoing>Flow_141bve7</bpmn:outgoing>
     </bpmn:receiveTask>
@@ -184,6 +184,8 @@
   </bpmn:process>
   <bpmn:message id="Message_2b8iden" name="cancel_message" />
   <bpmn:message id="Message_2puak2j" name="Message_2puak2j" />
+  <bpmn:message id="Message_128445d" name="deliveryfinish_message" />
+  <bpmn:message id="Message_0edgn9c" name="delivery_finish_message" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="delivery">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="newState">
