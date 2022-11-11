@@ -4,15 +4,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.producer.Producer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
@@ -20,6 +17,7 @@ import ru.mikhailova.dto.DeliveryRequestConfirmDto;
 import ru.mikhailova.dto.DeliveryRequestCreateDto;
 import ru.mikhailova.dto.DeliveryRequestUpdateDto;
 import ru.mikhailova.dto.DeliveryResponseDto;
+import ru.mikhailova.listener.DeliveryFinishDto;
 import ru.mikhailova.listener.DeliveryMessageDto;
 import ru.mikhailova.repository.DeliveryRepository;
 
@@ -36,9 +34,6 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     private KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
     private ConsumerFactory<String, JsonNode> consumerFactory;
-
-    @Autowired
-    private ProducerFactory<String, JsonNode> producerFactory;
 
     private Delivery delivery;
 
@@ -101,7 +96,7 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
 
 
         DeliveryResponseDto responseDto = performPickUpDelivery(delivery.getId(), DeliveryResponseDto.class);
-        assertThat(responseDto.getState()).isEqualTo(DeliveryState.RECEIVED.toString());
+        assertThat(responseDto.getState()).isEqualTo(DeliveryState.FINISHED.toString());
     }
 
     @Test
@@ -162,17 +157,21 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
             assertThat(record.value()).isNotEmpty();
         }
     }
-    //TODO receiveTaskTest
+
     @Test
-    @Disabled
     void couldCheckReceiveMessageOfDeliveryFinish() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
         dto.setState("CONFIRMED");
         dto.setIsPickUp(false);
-
         performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
-        Producer<String, JsonNode> producer = producerFactory.createProducer();
+        DeliveryFinishDto deliveryFinishDto = new DeliveryFinishDto();
+        deliveryFinishDto.setId(delivery.getId());
 
+        kafkaTemplate.send("deliveryFinishMessage", deliveryFinishDto);
+        Thread.sleep(1000);
+        Delivery finishedDelivery = repository.findById(delivery.getId()).orElseThrow();
+
+        assertThat(finishedDelivery.getState()).isEqualTo(DeliveryState.FINISHED);
     }
 }

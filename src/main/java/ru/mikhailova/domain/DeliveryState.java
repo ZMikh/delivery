@@ -5,7 +5,6 @@ public enum DeliveryState {
     IN_PROCESSING,
     REGISTERED,
     PAID,
-    RECEIVED,
     FINISHED,
     TECH_ERROR,
     CLIENT_CANCELLATION,

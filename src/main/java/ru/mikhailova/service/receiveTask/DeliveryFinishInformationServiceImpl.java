@@ -1,4 +1,4 @@
-package ru.mikhailova.service.sendTask.sendNotification;
+package ru.mikhailova.service.receiveTask;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,19 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.repository.DeliveryRepository;
 
-// TODO replace entity with dto
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class SendNotificationServiceImpl implements SendNotificationService {
-    private final DeliveryRepository repository;
+public class DeliveryFinishInformationServiceImpl implements DeliveryFinishInformationService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final DeliveryRepository repository;
 
     @Transactional(readOnly = true)
     @Override
-    public void sendNotification(Long id) {
+    public void sendMessageTask(Long id) {
         Delivery delivery = repository.findById(id).orElseThrow();
-        log.info("notification is sent");
-        kafkaTemplate.send("notification", delivery);
+        log.info("delivery finish information with id: {} is sent", delivery.getId());
+        kafkaTemplate.send("deliveryFinishMessage", delivery);
     }
 }

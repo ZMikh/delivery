@@ -12,7 +12,6 @@ public class StateMapper {
             "registeredState", DeliveryState.REGISTERED,
             "paymentErrorState", DeliveryState.PAYMENT_ERROR,
             "paidState", DeliveryState.PAID,
-            "receivedState", DeliveryState.RECEIVED,
             "noFeedbackState", DeliveryState.NO_FEEDBACK,
             "finishedState", DeliveryState.FINISHED,
             "clientCancellationState", DeliveryState.CLIENT_CANCELLATION,
