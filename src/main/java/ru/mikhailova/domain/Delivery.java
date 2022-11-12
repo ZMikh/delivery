@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Доставка
@@ -44,8 +45,8 @@ public class Delivery {
      */
     private Boolean isPickUp;
     /**
-     * Оуенка сервиса
+     * Список товаров из корзины покупателя
      */
-    @Enumerated(value = EnumType.ORDINAL)
-    private Feedback feedback;
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "delivery", fetch = FetchType.LAZY)
+    private List<Shoppingcart> shoppingcartList;
 }

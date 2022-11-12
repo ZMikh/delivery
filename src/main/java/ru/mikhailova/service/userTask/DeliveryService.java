@@ -1,6 +1,7 @@
 package ru.mikhailova.service.userTask;
 
 import ru.mikhailova.domain.Delivery;
+import ru.mikhailova.domain.Shoppingcart;
 
 import java.util.List;
 
@@ -60,4 +61,6 @@ public interface DeliveryService {
      * @return сущность Доставка
      */
     Delivery pickUpDelivery(Long id);
+
+    List<Shoppingcart> getShoppingcartListByDeliveryId(Long id);
 }

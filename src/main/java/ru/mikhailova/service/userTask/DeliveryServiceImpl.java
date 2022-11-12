@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mikhailova.domain.ConfirmState;
 import ru.mikhailova.domain.Delivery;
+import ru.mikhailova.domain.Shoppingcart;
 import ru.mikhailova.repository.DeliveryRepository;
 
 import java.util.HashMap;
@@ -102,5 +103,12 @@ public class DeliveryServiceImpl implements DeliveryService {
         taskService.complete(task.getId());
         log.info("delivery with id {} picked-up by client", id);
         return delivery;
+    }
+
+    @Transactional
+    @Override
+    public List<Shoppingcart> getShoppingcartListByDeliveryId(Long id) {
+        Delivery delivery = repository.findById(id).orElseThrow();
+        return delivery.getShoppingcartList();
     }
 }

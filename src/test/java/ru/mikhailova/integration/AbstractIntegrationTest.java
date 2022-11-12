@@ -2,6 +2,7 @@ package ru.mikhailova.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import ru.mikhailova.resttemplate.ShoppingcartRestTemplate;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,10 +33,13 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String url = "/api/v1/delivery";
+    @Mock
+    protected ShoppingcartRestTemplate shoppingcartRestTemplate;
+
+    private static final String URL = "/api/v1/delivery";
 
     protected <T> T performCreateDelivery(Object requestBody, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(url + "/create")
+        ResultActions resultActions = mockMvc.perform(post(URL + "/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -44,13 +49,13 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected void performDeleteDeliveryById(Long id) throws Exception {
-        mockMvc.perform(delete(url + "/delete/" + id))
+        mockMvc.perform(delete(URL + "/delete/" + id))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     protected <T> T performGetDeliveryById(Long id, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(url + "/get/" + id)
+        ResultActions resultActions = mockMvc.perform(get(URL + "/get/" + id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -59,7 +64,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performGetAllDeliveries(TypeReference<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(url + "/get-all")
+        ResultActions resultActions = mockMvc.perform(get(URL + "/get-all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -68,7 +73,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performUpdateDeliveryById(Long id, Object requestBody, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(put(url + "/update/" + id)
+        ResultActions resultActions = mockMvc.perform(put(URL + "/update/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -78,7 +83,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performConfirmDelivery(Long id, Object requestBody, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(url + "/confirm/" + id)
+        ResultActions resultActions = mockMvc.perform(post(URL + "/confirm/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -88,7 +93,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performPickUpDelivery(Long id, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(url + "/pick-up/" + id)
+        ResultActions resultActions = mockMvc.perform(post(URL + "/pick-up/" + id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
