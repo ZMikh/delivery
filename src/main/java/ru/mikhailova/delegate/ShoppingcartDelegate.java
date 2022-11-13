@@ -16,6 +16,6 @@ public class ShoppingcartDelegate implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         Long id = (Long) delegateExecution.getVariable("id");
         log.info("delegate with id: {} executed", id);
-        shoppingcartService.getDelivery(id);
+//        shoppingcartService.getDelivery(id);
     }
 }

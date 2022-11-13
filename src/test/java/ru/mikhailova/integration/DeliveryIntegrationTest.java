@@ -1,6 +1,6 @@
 package ru.mikhailova.integration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -8,17 +8,21 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.web.client.RestTemplate;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
 import ru.mikhailova.dto.*;
 import ru.mikhailova.listener.DeliveryFinishDto;
 import ru.mikhailova.listener.DeliveryMessageDto;
 import ru.mikhailova.repository.DeliveryRepository;
+import ru.mikhailova.service.serviceTask.shoppingcart.ShoppingcartService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,6 +42,14 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
 
     private TypeReference<List<DeliveryResponseDto>> listTypeReference = new TypeReference<List<DeliveryResponseDto>>() {
     };
+
+    @Mock
+    protected RestTemplate restTemplate;
+
+    @Mock
+    private ShoppingcartService shoppingcartService;
+
+    private static final String DELIVERY_RESOURCE_URL = "http://localhost:8080/api/v1/shoppingcart/get/";
 
     @BeforeEach
     void setUp() throws Exception {
@@ -174,12 +186,15 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
         assertThat(finishedDelivery.getState()).isEqualTo(DeliveryState.FINISHED);
     }
 
-    //TODO
     @Test
-    void couldCheckShoppingcartServiceTask() throws JsonProcessingException {
-        ResponseEntity<ShoppingcartResponseDtoList> resource = null;
-        when(shoppingcartRestTemplate.getResource(delivery.getId())).thenReturn(resource);
+    void couldCheckShoppingcartServiceTask() throws Exception {
+        String jsonString = getJsonString("/json/shoppingcart.json");
 
+        ShoppingcartResponseDtoList value = objectMapper.readValue(jsonString, ShoppingcartResponseDtoList.class);
+        when(restTemplate.getForEntity(DELIVERY_RESOURCE_URL, ShoppingcartResponseDtoList.class))
+                .thenReturn(new ResponseEntity<>(value, HttpStatus.OK));
+
+        ShoppingcartResponseDtoList shoppingcartResponseDtoList = shoppingcartService.getShoppingcartResponseDtoList(delivery.getId());
 
     }
 }

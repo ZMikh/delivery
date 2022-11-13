@@ -2,7 +2,6 @@ package ru.mikhailova.integration;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +11,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import ru.mikhailova.resttemplate.ShoppingcartRestTemplate;
+
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -32,9 +35,6 @@ public abstract class AbstractIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Mock
-    protected ShoppingcartRestTemplate shoppingcartRestTemplate;
 
     private static final String URL = "/api/v1/delivery";
 
@@ -99,5 +99,10 @@ public abstract class AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         return objectMapper.readValue(resultActions.andReturn().getResponse().getContentAsString(), response);
+    }
+
+    protected String getJsonString(String path) throws Exception {
+        URI uri = Objects.requireNonNull(getClass().getResource(path)).toURI();
+        return Files.readString(Path.of(uri));
     }
 }
