@@ -12,7 +12,7 @@ public class SendDeliveryInformationDelegate implements JavaDelegate {
     private final SendDeliveryInformationService sendDeliveryInformationService;
 
     @Override
-    public void execute(DelegateExecution delegateExecution) throws Exception {
+    public void execute(DelegateExecution delegateExecution) {
         Long id = (Long) delegateExecution.getVariable("id");
         sendDeliveryInformationService.sendDeliveryInformation(id);
     }

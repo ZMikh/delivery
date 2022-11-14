@@ -17,4 +17,6 @@ public class DeliveryRequestConfirmDto {
     private Boolean isPickUp;
     @ApiModelProperty("Время доставки")
     private LocalDateTime deliveryTime;
+    @ApiModelProperty("Описание доставки")
+    private String description;
 }

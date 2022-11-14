@@ -31,7 +31,7 @@ public class DeliveryController {
     }
 
     @GetMapping("/get/{id}")
-    @ApiOperation("Получение доставки по идентификатору доставки")
+    @ApiOperation("Получение доставки по идентификатору")
     public DeliveryResponseDto getDeliveryById(@PathVariable Long id) {
         Delivery delivery = service.getDeliveryById(id);
         return mapper.toDeliveryResponseDto(delivery);

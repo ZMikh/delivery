@@ -13,9 +13,11 @@ public class ShoppingcartMapper {
     public ShoppingcartMapper() {
         this.mapper = new ModelMapper();
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        mapper.typeMap(ShoppingcartResponseDto.class, Shoppingcart.class)
+                .addMappings(mpr -> mpr.skip(Shoppingcart::setId));
     }
 
-    public ShoppingcartResponseDto toShoppingcartResponseDto(Shoppingcart shoppingcart) {
-       return mapper.map(shoppingcart, ShoppingcartResponseDto.class);
+    public Shoppingcart toShoppingcart(ShoppingcartResponseDto shoppingcartResponseDto) {
+        return mapper.map(shoppingcartResponseDto, Shoppingcart.class);
     }
 }

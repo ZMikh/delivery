@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.repository.DeliveryRepository;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SendDeliveryInformationServiceImpl implements SendDeliveryInformationService {
     private final DeliveryRepository repository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
@@ -20,6 +20,7 @@ public class SendDeliveryInformationServiceImpl implements SendDeliveryInformati
     public void sendDeliveryInformation(Long id) {
         Delivery delivery = repository.findById(id).orElseThrow();
         log.info("delivery information with id: {} is sent", delivery.getId());
-        kafkaTemplate.send("deliveryInformation", delivery);
+        kafkaTemplate.send("delivery_information", delivery);
     }
 }
+

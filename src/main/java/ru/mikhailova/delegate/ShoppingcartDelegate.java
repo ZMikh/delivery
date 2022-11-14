@@ -12,10 +12,11 @@ import ru.mikhailova.service.serviceTask.shoppingcart.ShoppingcartService;
 @Slf4j
 public class ShoppingcartDelegate implements JavaDelegate {
     private final ShoppingcartService shoppingcartService;
+
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         Long id = (Long) delegateExecution.getVariable("id");
-        log.info("delegate with id: {} executed", id);
-//        shoppingcartService.getDelivery(id);
+        log.info("shoppingcart delegate with id: {} executed", id);
+        shoppingcartService.getShoppingcartResponseDtoList(id);
     }
 }

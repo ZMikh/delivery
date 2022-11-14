@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 @ApiModel("Список моделей ответа по запросу корзины заказа")
 public class ShoppingcartResponseDtoList {
-    private List<ShoppingcartResponseDto> shoppingcartResponseDtoList;
+    private List<ShoppingcartResponseDto> shoppingcarts;
 }

@@ -1,6 +1,6 @@
 {
-  "delivery_id":150,
-  "shoppingcart": [
+  "delivery_id":1,
+  "shoppingcarts": [
     {
       "id": 1,
       "productName":"notebook",

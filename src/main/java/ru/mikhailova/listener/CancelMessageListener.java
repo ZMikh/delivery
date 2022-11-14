@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CancelMessageListener {
     private final RuntimeService service;
+
     @KafkaListener(topics = "cancelMessage", groupId = "delivery")
     public void messageListener(JsonNode dto) throws JsonProcessingException {
         DeliveryMessageDto deliveryMessageDto = new ObjectMapper().treeToValue(dto, DeliveryMessageDto.class);

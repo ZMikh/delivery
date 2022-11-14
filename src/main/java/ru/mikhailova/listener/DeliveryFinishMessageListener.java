@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DeliveryFinishMessageListener {
     private final RuntimeService service;
+
     @KafkaListener(topics = "deliveryFinishMessage", groupId = "delivery")
     public void deliveryFinishMessageListener(JsonNode dto) throws JsonProcessingException {
         DeliveryFinishDto deliveryFinishDto = new ObjectMapper().treeToValue(dto, DeliveryFinishDto.class);

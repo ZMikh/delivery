@@ -8,8 +8,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -22,12 +22,13 @@ import ru.mikhailova.dto.*;
 import ru.mikhailova.listener.DeliveryFinishDto;
 import ru.mikhailova.listener.DeliveryMessageDto;
 import ru.mikhailova.repository.DeliveryRepository;
-import ru.mikhailova.service.serviceTask.shoppingcart.ShoppingcartService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class DeliveryIntegrationTest extends AbstractIntegrationTest {
@@ -43,16 +44,20 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     private TypeReference<List<DeliveryResponseDto>> listTypeReference = new TypeReference<List<DeliveryResponseDto>>() {
     };
 
-    @Mock
+    @MockBean
     protected RestTemplate restTemplate;
 
-    @Mock
-    private ShoppingcartService shoppingcartService;
+    private ShoppingcartResponseDtoList shoppingcarts;
 
-    private static final String DELIVERY_RESOURCE_URL = "http://localhost:8080/api/v1/shoppingcart/get/";
+    private static final String CONFIRMED_STATE = "CONFIRMED";
 
     @BeforeEach
     void setUp() throws Exception {
+        String jsonString = getJsonString("/json/shoppingcart.json");
+        shoppingcarts = objectMapper.readValue(jsonString, ShoppingcartResponseDtoList.class);
+        when(restTemplate.getForEntity(anyString(), any()))
+                .thenReturn(new ResponseEntity<>(shoppingcarts, HttpStatus.OK));
+
         DeliveryRequestCreateDto dto = new DeliveryRequestCreateDto();
         dto.setDescription("dish");
         DeliveryResponseDto responseDto = performCreateDelivery(dto, DeliveryResponseDto.class);
@@ -81,7 +86,7 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckDeliveryConfirmationUserTask() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState("CONFIRMED");
+        dto.setState(CONFIRMED_STATE);
 
         DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
@@ -101,7 +106,7 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckDeliveryIsPickedUpUserTask() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState("CONFIRMED");
+        dto.setState(CONFIRMED_STATE);
         dto.setIsPickUp(true);
         performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
@@ -156,15 +161,15 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckSendDeliveryInformation() throws Exception {
         try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
-            consumer.subscribe(List.of("deliveryInformation"));
+            consumer.subscribe(List.of("delivery_information"));
 
             DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-            dto.setState("CONFIRMED");
+            dto.setState(CONFIRMED_STATE);
             dto.setIsPickUp(false);
 
             performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
-            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, "deliveryInformation", 2000);
+            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, "delivery_information", 2000);
             assertThat(record.value()).isNotEmpty();
         }
     }
@@ -172,7 +177,7 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckReceiveMessageOfDeliveryFinish() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState("CONFIRMED");
+        dto.setState(CONFIRMED_STATE);
         dto.setIsPickUp(false);
         performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
@@ -187,14 +192,19 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void couldCheckShoppingcartServiceTask() throws Exception {
-        String jsonString = getJsonString("/json/shoppingcart.json");
+    void couldCheckShoppingcartServiceTask() {
+        Delivery currentDelivery = repository.findById(delivery.getId()).orElseThrow();
+        assertThat(currentDelivery.getShoppingcarts().size()).isEqualTo(2);
+    }
 
-        ShoppingcartResponseDtoList value = objectMapper.readValue(jsonString, ShoppingcartResponseDtoList.class);
-        when(restTemplate.getForEntity(DELIVERY_RESOURCE_URL, ShoppingcartResponseDtoList.class))
-                .thenReturn(new ResponseEntity<>(value, HttpStatus.OK));
+    @Test
+    void couldCheckPaymentServiceTaskError() throws Exception {
+        DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
+        dto.setState(CONFIRMED_STATE);
+        dto.setDescription("some error");
 
-        ShoppingcartResponseDtoList shoppingcartResponseDtoList = shoppingcartService.getShoppingcartResponseDtoList(delivery.getId());
+        DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
+        assertThat(responseDto.getState()).isEqualTo(DeliveryState.PAYMENT_ERROR.toString());
     }
 }

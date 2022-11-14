@@ -11,4 +11,5 @@ public class DeliveryConfirmInfo {
     private String address;
     private Boolean isPickUp;
     private LocalDateTime deliveryTime;
+    private String description;
 }

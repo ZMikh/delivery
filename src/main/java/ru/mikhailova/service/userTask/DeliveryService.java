@@ -1,7 +1,6 @@
 package ru.mikhailova.service.userTask;
 
 import ru.mikhailova.domain.Delivery;
-import ru.mikhailova.domain.Shoppingcart;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public interface DeliveryService {
     /**
      * Обновить параметры доставки по идентификатору доставки
      *
-     * @param id идентификатор доставки
+     * @param id                 идентификатор доставки
      * @param deliveryUpdateInfo обновленные параметры доставки
      * @return сущность Доставка
      */
@@ -47,6 +46,7 @@ public interface DeliveryService {
      * @param id идентификатор доставки
      */
     void deleteDeliveryById(Long id);
+
     /**
      * Подтвердить заказ-доставку по идентификатору доставки
      *
@@ -54,6 +54,7 @@ public interface DeliveryService {
      * @return сущность Доставка
      */
     Delivery confirmDelivery(Long id, DeliveryConfirmInfo deliveryConfirmInfo);
+
     /**
      * Выдать клиенту заказ самовывозом по идентификатору доставки
      *
@@ -61,6 +62,4 @@ public interface DeliveryService {
      * @return сущность Доставка
      */
     Delivery pickUpDelivery(Long id);
-
-    List<Shoppingcart> getShoppingcartListByDeliveryId(Long id);
 }

@@ -130,7 +130,7 @@
     </bpmn:endEvent>
     <bpmn:boundaryEvent id="Event_0a1gijk" attachedToRef="Activity_0yd2fln">
       <bpmn:outgoing>Flow_053j2hj</bpmn:outgoing>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_1cg1p6a" />
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1cg1p6a" errorRef="Error_0krwt7a" />
     </bpmn:boundaryEvent>
     <bpmn:exclusiveGateway id="Gateway_0plqyy4">
       <bpmn:incoming>Flow_03kjlig</bpmn:incoming>
@@ -152,6 +152,7 @@
   <bpmn:message id="Message_2puak2j" name="Message_2puak2j" />
   <bpmn:message id="Message_128445d" name="deliveryfinish_message" />
   <bpmn:message id="Message_0edgn9c" name="delivery_finish_message" />
+  <bpmn:error id="Error_0krwt7a" name="Error_03juc0l" errorCode="PAYMENT_ERROR" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="delivery">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="newState">
@@ -206,15 +207,6 @@
           <dc:Bounds x="559" y="485" width="83" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_14um5yo_di" bpmnElement="finishedState">
-        <dc:Bounds x="1682" y="259" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1659" y="302" width="83" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0o8kjwb_di" bpmnElement="Gateway_0o8kjwb" isMarkerVisible="true">
-        <dc:Bounds x="1565" y="252" width="50" height="50" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1y7xdyu_di" bpmnElement="Activity_1je6dze" isExpanded="true">
         <dc:Bounds x="170" y="560" width="350" height="200" />
       </bpmndi:BPMNShape>
@@ -244,6 +236,9 @@
       <bpmndi:BPMNShape id="Gateway_003ua1y_di" bpmnElement="Gateway_003ua1y" isMarkerVisible="true">
         <dc:Bounds x="1155" y="252" width="50" height="50" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0o8kjwb_di" bpmnElement="Gateway_0o8kjwb" isMarkerVisible="true">
+        <dc:Bounds x="1565" y="252" width="50" height="50" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_12gi1c1_di" bpmnElement="Activity_0pqo40j">
         <dc:Bounds x="1260" y="237" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -255,6 +250,12 @@
       <bpmndi:BPMNShape id="Activity_049e8rx_di" bpmnElement="Activity_0hhjx1y">
         <dc:Bounds x="1410" y="237" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14um5yo_di" bpmnElement="finishedState">
+        <dc:Bounds x="1682" y="259" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1659" y="302" width="83" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0plqyy4_di" bpmnElement="Gateway_0plqyy4" isMarkerVisible="true">
         <dc:Bounds x="495" y="252" width="50" height="50" />

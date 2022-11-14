@@ -12,7 +12,7 @@ public class SendNotificationDelegate implements JavaDelegate {
     private final SendNotificationService sendNotificationService;
 
     @Override
-    public void execute(DelegateExecution delegateExecution) throws Exception {
+    public void execute(DelegateExecution delegateExecution) {
         Long id = (Long) delegateExecution.getVariable("id");
         sendNotificationService.sendNotification(id);
     }
