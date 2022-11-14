@@ -1,4 +1,4 @@
-package ru.mikhailova.service.sendTask.sendNotification;
+package ru.mikhailova.service.sendNotification;
 
 /**
  * Отправка уведомления

@@ -5,18 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
-import ru.mikhailova.service.serviceTask.shoppingcart.ShoppingcartService;
+import ru.mikhailova.service.cart.CartService;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ShoppingcartDelegate implements JavaDelegate {
-    private final ShoppingcartService shoppingcartService;
+public class CartDelegate implements JavaDelegate {
+    private final CartService cartService;
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         Long id = (Long) delegateExecution.getVariable("id");
-        log.info("shoppingcart delegate with id: {} executed", id);
-        shoppingcartService.getShoppingcartResponseDtoList(id);
+        log.info("Cart delegate with id: {} executed", id);
+        cartService.getCartResponseDtoList(id);
     }
 }

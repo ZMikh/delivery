@@ -22,6 +22,5 @@ http://localhost:8080/swagger-ui.html#/
 - ```ModelMapper```
 - ```Camunda BPM```
 - ```Apache Kafka```
-- ```Spring Boot Actuator```
 - ```Swagger```
 - ```Docker```

@@ -17,7 +17,7 @@ public interface DeliveryService {
     Delivery createDelivery(Delivery delivery);
 
     /**
-     * Получить доставку по идентификатору доставки
+     * Получить доставку по идентификатору
      *
      * @param id идентификатор доставки
      * @return сущность Доставка
@@ -32,7 +32,7 @@ public interface DeliveryService {
     List<Delivery> getAllDeliveries();
 
     /**
-     * Обновить параметры доставки по идентификатору доставки
+     * Обновить параметры доставки по идентификатору
      *
      * @param id                 идентификатор доставки
      * @param deliveryUpdateInfo обновленные параметры доставки
@@ -41,14 +41,14 @@ public interface DeliveryService {
     Delivery updateDeliveryById(Long id, DeliveryUpdateInfo deliveryUpdateInfo);
 
     /**
-     * Удалить доставку по идентификатору доставки
+     * Удалить доставку по идентификатору
      *
      * @param id идентификатор доставки
      */
     void deleteDeliveryById(Long id);
 
     /**
-     * Подтвердить заказ-доставку по идентификатору доставки
+     * Подтвердить заказ-доставку по идентификатору
      *
      * @param id идентификатор доставки
      * @return сущность Доставка
@@ -56,7 +56,7 @@ public interface DeliveryService {
     Delivery confirmDelivery(Long id, DeliveryConfirmInfo deliveryConfirmInfo);
 
     /**
-     * Выдать клиенту заказ самовывозом по идентификатору доставки
+     * Выдать клиенту заказ самовывозом по идентификатору
      *
      * @param id идентификатор доставки
      * @return сущность Доставка

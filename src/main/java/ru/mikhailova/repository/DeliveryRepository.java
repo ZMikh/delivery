@@ -11,10 +11,10 @@ import java.util.Optional;
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
     @Override
-    @EntityGraph(value = "Delivery.withShoppingcarts")
+    @EntityGraph(value = "Delivery.withCarts")
     Optional<Delivery> findById(Long aLong);
 
     @Override
-    @EntityGraph(value = "Delivery.withShoppingcarts")
+    @EntityGraph(value = "Delivery.withCarts")
     List<Delivery> findAll();
 }

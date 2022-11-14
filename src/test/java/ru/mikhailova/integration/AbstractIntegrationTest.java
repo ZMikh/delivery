@@ -36,10 +36,10 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String URL = "/api/v1/delivery";
+    private static final String DELIVERY_API = "/api/v1/delivery";
 
     protected <T> T performCreateDelivery(Object requestBody, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(URL + "/create")
+        ResultActions resultActions = mockMvc.perform(post(DELIVERY_API + "/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -49,13 +49,13 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected void performDeleteDeliveryById(Long id) throws Exception {
-        mockMvc.perform(delete(URL + "/delete/" + id))
+        mockMvc.perform(delete(DELIVERY_API + "/delete/" + id))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
 
     protected <T> T performGetDeliveryById(Long id, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(URL + "/get/" + id)
+        ResultActions resultActions = mockMvc.perform(get(DELIVERY_API + "/get/" + id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -64,7 +64,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performGetAllDeliveries(TypeReference<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(get(URL + "/get-all")
+        ResultActions resultActions = mockMvc.perform(get(DELIVERY_API + "/get-all")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -73,7 +73,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performUpdateDeliveryById(Long id, Object requestBody, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(put(URL + "/update/" + id)
+        ResultActions resultActions = mockMvc.perform(put(DELIVERY_API + "/update/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -83,7 +83,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performConfirmDelivery(Long id, Object requestBody, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(URL + "/confirm/" + id)
+        ResultActions resultActions = mockMvc.perform(post(DELIVERY_API + "/confirm/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBody)))
                 .andDo(print())
@@ -93,7 +93,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected <T> T performPickUpDelivery(Long id, Class<T> response) throws Exception {
-        ResultActions resultActions = mockMvc.perform(post(URL + "/pick-up/" + id)
+        ResultActions resultActions = mockMvc.perform(post(DELIVERY_API + "/pick-up/" + id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());

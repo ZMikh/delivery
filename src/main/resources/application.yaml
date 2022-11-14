@@ -24,3 +24,17 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.add.type.headers: false
+service:
+  cart:
+    url: http://localhost:8888/
+stubs:
+  cart:
+    enable: true
+kafka:
+  topic:
+    cancel-message: cancelMessage
+    delivery-finish-message: deliveryFinishMessage
+    notification: notification
+    delivery-information: deliveryInformation
+delivery:
+  confirm-state: CONFIRMED

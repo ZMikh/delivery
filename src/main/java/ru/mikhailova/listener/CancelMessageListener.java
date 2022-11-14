@@ -10,15 +10,15 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class CancelMessageListener {
     private final RuntimeService service;
 
-    @KafkaListener(topics = "cancelMessage", groupId = "delivery")
+    @KafkaListener(topics = "${kafka.topic.cancel-message}", groupId = "delivery")
     public void messageListener(JsonNode dto) throws JsonProcessingException {
         DeliveryMessageDto deliveryMessageDto = new ObjectMapper().treeToValue(dto, DeliveryMessageDto.class);
-        log.info("new cancel message from {}", deliveryMessageDto);
+        log.info("New cancel message from {}", deliveryMessageDto);
 
         service.createMessageCorrelation("cancel_message")
                 .processInstanceVariableEquals("id", deliveryMessageDto.getId())

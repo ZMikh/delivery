@@ -38,7 +38,7 @@
     <bpmn:sequenceFlow id="Flow_178quoq" sourceRef="paidState" targetRef="Gateway_003ua1y" />
     <bpmn:sequenceFlow id="Flow_0wuv4v6" sourceRef="Activity_0yd2fln" targetRef="paidState" />
     <bpmn:sequenceFlow id="Flow_1j8upcr" sourceRef="registeredState" targetRef="Activity_0yd2fln" />
-    <bpmn:serviceTask id="Activity_1rlfy1m" name="Получить содержимое корзины" camunda:delegateExpression="${shoppingcartDelegate}">
+    <bpmn:serviceTask id="Activity_1rlfy1m" name="Получить содержимое корзины" camunda:delegateExpression="${cartDelegate}">
       <bpmn:incoming>Flow_178v87h</bpmn:incoming>
       <bpmn:outgoing>Flow_06hld7f</bpmn:outgoing>
     </bpmn:serviceTask>

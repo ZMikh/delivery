@@ -7,7 +7,7 @@ import ru.mikhailova.domain.DeliveryState;
  */
 public interface DeliveryChangeStateService {
     /**
-     * Выполнение переходов между событиями
+     * Сменить событие
      * @param deliveryState статус доставки
      * @param id идентификатор доставик
      */

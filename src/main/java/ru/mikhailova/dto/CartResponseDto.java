@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @ApiModel("Параметры ответа по запросу корзины заказа")
-public class ShoppingcartResponseDto {
+public class CartResponseDto {
     @ApiModelProperty("Идентификатор товара")
     private Long id;
     @ApiModelProperty("Наименование товара")

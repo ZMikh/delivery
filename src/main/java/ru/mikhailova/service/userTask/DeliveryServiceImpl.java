@@ -26,7 +26,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public Delivery createDelivery(Delivery delivery) {
         Delivery savedDelivery = repository.save(delivery);
-        log.info("delivery with id: {} is created", savedDelivery.getId());
+        log.info("Delivery with id: {} is created", savedDelivery.getId());
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", savedDelivery.getId());
         runtimeService.startProcessInstanceByKey("delivery", map);
@@ -52,7 +52,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setDeliveryTime(deliveryUpdateInfo.getDeliveryTime());
         delivery.setDescription(deliveryUpdateInfo.getDescription());
         repository.save(delivery);
-        log.info("delivery with id: {} is updated", id);
+        log.info("Delivery with id: {} is updated", id);
         return delivery;
     }
 
@@ -60,7 +60,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public void deleteDeliveryById(Long id) {
         repository.deleteById(id);
-        log.info("delivery with id: {} is deleted", id);
+        log.info("Delivery with id: {} is deleted", id);
     }
 
     @Transactional
@@ -71,7 +71,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setIsPickUp(deliveryConfirmInfo.getIsPickUp());
         delivery.setDescription(deliveryConfirmInfo.getDescription());
         repository.save(delivery);
-        log.info("delivery with id {} confirmed", id);
+        log.info("Delivery with id {} confirmed", id);
 
         Task task = taskService.createTaskQuery()
                 .taskDefinitionKey("taskConfirmation")
@@ -101,7 +101,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new RuntimeException();
         }
         taskService.complete(task.getId());
-        log.info("delivery with id {} picked-up by client", id);
+        log.info("Delivery with id {} picked-up by client", id);
         return delivery;
     }
 }

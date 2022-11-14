@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 public class DeliveryFinishMessageListener {
     private final RuntimeService service;
 
-    @KafkaListener(topics = "deliveryFinishMessage", groupId = "delivery")
+    @KafkaListener(topics = "${kafka.topic.delivery-finish-message}", groupId = "delivery")
     public void deliveryFinishMessageListener(JsonNode dto) throws JsonProcessingException {
         DeliveryFinishDto deliveryFinishDto = new ObjectMapper().treeToValue(dto, DeliveryFinishDto.class);
-        log.info("new delivery finish message from {}", deliveryFinishDto);
+        log.info("New delivery finish message from {}", deliveryFinishDto);
 
         service.createMessageCorrelation("delivery_finish_message")
                 .processInstanceVariableEquals("id", deliveryFinishDto.getId())

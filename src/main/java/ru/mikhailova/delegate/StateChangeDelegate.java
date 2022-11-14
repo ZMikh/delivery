@@ -14,7 +14,7 @@ public class StateChangeDelegate implements JavaDelegate {
     private final StateMapper mapper;
 
     @Override
-    public void execute(DelegateExecution delegateExecution) throws Exception {
+    public void execute(DelegateExecution delegateExecution) {
         Long id = (Long) delegateExecution.getVariable("id");
         String activityInstanceId = delegateExecution.getCurrentActivityId();
         service.changeDeliveryState(mapper.getStateByActivityId(activityInstanceId), id);

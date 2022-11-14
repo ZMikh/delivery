@@ -16,7 +16,7 @@ public class PaymentDelegate implements JavaDelegate {
     private final DeliveryRepository repository;
 
     @Override
-    public void execute(DelegateExecution delegateExecution) throws Exception {
+    public void execute(DelegateExecution delegateExecution) {
         Long id = (Long) delegateExecution.getVariable("id");
         Delivery delivery = repository.findById(id).orElseThrow();
         String description = delivery.getDescription();

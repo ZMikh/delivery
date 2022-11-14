@@ -1,8 +1,7 @@
 {
   "delivery_id":1,
-  "shoppingcarts": [
+  "carts": [
     {
-      "id": 1,
       "productName":"notebook",
       "articleNumber":"KSJ286",
       "amount":2,
@@ -10,7 +9,6 @@
       "totalCost":501.0
     },
     {
-      "id": 2,
       "productName":"phone",
       "articleNumber":"KSJ287",
       "amount":3,

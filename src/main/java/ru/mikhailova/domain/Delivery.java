@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(name = "Delivery.withShoppingcarts", attributeNodes = {@NamedAttributeNode(value = "shoppingcarts")})
+@NamedEntityGraph(name = "Delivery.withCarts", attributeNodes = {@NamedAttributeNode(value = "carts")})
 public class Delivery {
     /**
      * Идентификатор доставки
@@ -50,5 +50,5 @@ public class Delivery {
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "delivery_id")
-    private List<Shoppingcart> shoppingcarts;
+    private List<Cart> carts;
 }

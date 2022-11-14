@@ -1,16 +1,16 @@
-package ru.mikhailova.service.serviceTask.shoppingcart;
+package ru.mikhailova.service.cart;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * Сервис корзины покаупателя
  */
-public interface ShoppingcartService {
+public interface CartService {
     /**
      * Получить содержимое корзины покупателя по идентификатору доставки
      *
      * @param id идентификатор доставки
      * @throws JsonProcessingException
      */
-    void getShoppingcartResponseDtoList(Long id) throws JsonProcessingException;
+    void getCartResponseDtoList(Long id) throws JsonProcessingException;
 }

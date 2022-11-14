@@ -1,4 +1,4 @@
-package ru.mikhailova.service.sendTask.sendDeliveryInfornation;
+package ru.mikhailova.service.sendDeliveryInfornation;
 
 /**
  * Отправка информации по доставке

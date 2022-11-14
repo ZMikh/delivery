@@ -13,13 +13,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Shoppingcart {
+public class Cart {
     /**
      * Идентификатор товара
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shoppingcart_id")
-    @SequenceGenerator(name = "shoppingcart_id", sequenceName = "shoppingcart_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_id")
+    @SequenceGenerator(name = "cart_id", sequenceName = "cart_sequence", allocationSize = 1)
     private Long id;
     /**
      * Наименование товара
