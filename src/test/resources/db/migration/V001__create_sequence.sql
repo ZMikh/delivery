@@ -1,2 +1,0 @@
-CREATE SEQUENCE IF NOT EXISTS delivery_sequence;
-CREATE SEQUENCE IF NOT EXISTS cart_sequence;

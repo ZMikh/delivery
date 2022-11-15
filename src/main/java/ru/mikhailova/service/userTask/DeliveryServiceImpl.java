@@ -27,9 +27,11 @@ public class DeliveryServiceImpl implements DeliveryService {
     public Delivery createDelivery(Delivery delivery) {
         Delivery savedDelivery = repository.save(delivery);
         log.info("Delivery with id: {} is created", savedDelivery.getId());
+
         HashMap<String, Object> map = new HashMap<>();
         map.put("id", savedDelivery.getId());
         runtimeService.startProcessInstanceByKey("delivery", map);
+
         return savedDelivery;
     }
 
@@ -51,6 +53,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         Delivery delivery = repository.findById(id).orElseThrow();
         delivery.setDeliveryTime(deliveryUpdateInfo.getDeliveryTime());
         delivery.setDescription(deliveryUpdateInfo.getDescription());
+        delivery.setAddress(delivery.getAddress());
         repository.save(delivery);
         log.info("Delivery with id: {} is updated", id);
         return delivery;
@@ -70,6 +73,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setDeliveryTime(deliveryConfirmInfo.getDeliveryTime());
         delivery.setIsPickUp(deliveryConfirmInfo.getIsPickUp());
         delivery.setDescription(deliveryConfirmInfo.getDescription());
+        delivery.setAddress(deliveryConfirmInfo.getAddress());
         repository.save(delivery);
         log.info("Delivery with id {} confirmed", id);
 
@@ -80,7 +84,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (task == null) {
             throw new RuntimeException();
         }
-        taskService.setVariable(task.getId(), "isCancelled", deliveryConfirmInfo.getState().equals(ConfirmState.CANCELLED));
+        taskService.setVariable(task.getId(), "isCancelled", ConfirmState.CANCELLED.equals(deliveryConfirmInfo.getConfirmationState()));
         taskService.setVariable(task.getId(), "isPickUp", deliveryConfirmInfo.getIsPickUp());
         taskService.complete(task.getId());
 

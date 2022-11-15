@@ -33,15 +33,13 @@ public class DeliveryController {
     @GetMapping("/get/{id}")
     @ApiOperation("Получение доставки по идентификатору")
     public DeliveryResponseDto getDeliveryById(@PathVariable Long id) {
-        Delivery delivery = service.getDeliveryById(id);
-        return mapper.toDeliveryResponseDto(delivery);
+        return mapper.toDeliveryResponseDto(service.getDeliveryById(id));
     }
 
     @GetMapping("/get-all")
     @ApiOperation("Получение всех доставок")
     public List<DeliveryResponseDto> getAll() {
-        List<Delivery> deliveries = service.getAllDeliveries();
-        return deliveries.stream()
+        return service.getAllDeliveries().stream()
                 .map(mapper::toDeliveryResponseDto)
                 .collect(Collectors.toList());
     }

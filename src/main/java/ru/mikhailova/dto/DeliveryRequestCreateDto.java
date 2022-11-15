@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel("Параметры для ответа по созданию доставки")
+@ApiModel("Параметры для запроса по созданию доставки")
 public class DeliveryRequestCreateDto {
     @ApiModelProperty("Описание доставки")
     private String description;

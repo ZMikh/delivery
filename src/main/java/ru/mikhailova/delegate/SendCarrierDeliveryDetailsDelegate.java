@@ -4,16 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
-import ru.mikhailova.service.sendNotification.SendNotificationService;
+import ru.mikhailova.service.sendDeliveryInfornation.SendCarrierDeliveryDetailsService;
 
 @Component
 @RequiredArgsConstructor
-public class SendNotificationDelegate implements JavaDelegate {
-    private final SendNotificationService sendNotificationService;
+public class SendCarrierDeliveryDetailsDelegate implements JavaDelegate {
+    private final SendCarrierDeliveryDetailsService sendCarrierDeliveryDetailsService;
 
     @Override
     public void execute(DelegateExecution delegateExecution) {
         Long id = (Long) delegateExecution.getVariable("id");
-        sendNotificationService.sendNotification(id);
+        sendCarrierDeliveryDetailsService.sendDeliveryInformation(id);
     }
 }

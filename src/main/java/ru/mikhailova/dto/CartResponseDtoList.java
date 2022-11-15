@@ -9,6 +9,6 @@ import java.util.List;
 @Data
 @ApiModel("Список моделей ответа по запросу корзины заказа")
 public class CartResponseDtoList {
-    @ApiModelProperty("Состав корзины соответствующего заказа")
+    @ApiModelProperty("Содержимое корзины соответствующего заказа")
     private List<CartResponseDto> carts;
 }

@@ -3,7 +3,7 @@ package ru.mikhailova.service.sendNotification;
 /**
  * Отправка уведомления
  */
-public interface SendNotificationService {
+public interface SendNotificationToConfirmDeliveryService {
     /**
      * Отправка уведомления
      * @param id идентификатор доставки

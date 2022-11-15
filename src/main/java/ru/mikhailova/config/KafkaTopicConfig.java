@@ -24,7 +24,7 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic deliveryFinishTopic() {
+    public NewTopic deliveryFinishMessageTopic() {
         return TopicBuilder.name(deliveryFinishMessageTopic)
                 .build();
     }

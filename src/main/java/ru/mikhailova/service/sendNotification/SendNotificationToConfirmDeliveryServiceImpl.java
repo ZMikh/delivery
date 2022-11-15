@@ -11,14 +11,14 @@ import ru.mikhailova.repository.DeliveryRepository;
 // TODO replace entity with dto
 @Service
 @Slf4j
-public class SendNotificationServiceImpl implements SendNotificationService {
+public class SendNotificationToConfirmDeliveryServiceImpl implements SendNotificationToConfirmDeliveryService {
     private final DeliveryRepository repository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final String notificationTopic;
 
-    public SendNotificationServiceImpl(DeliveryRepository repository,
-                                       KafkaTemplate<String, Object> kafkaTemplate,
-                                       @Value("${kafka.topic.notification}") String notificationTopic) {
+    public SendNotificationToConfirmDeliveryServiceImpl(DeliveryRepository repository,
+                                                        KafkaTemplate<String, Object> kafkaTemplate,
+                                                        @Value("${kafka.topic.notification}") String notificationTopic) {
         this.repository = repository;
         this.kafkaTemplate = kafkaTemplate;
         this.notificationTopic = notificationTopic;

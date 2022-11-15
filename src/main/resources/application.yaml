@@ -1,9 +1,9 @@
 spring:
   port: 8080
   datasource:
-    username: postgres
-    url: jdbc:postgresql://localhost:5432/delivery
-    password: postgres
+    username: ${DATABASE_USERNAME:postgres}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/delivery}
+    password: ${DATABASE_PASSWORD:postgres}
   jpa:
     open-in-view: false
     hibernate:
@@ -24,17 +24,17 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         spring.json.add.type.headers: false
-service:
-  cart:
-    url: http://localhost:8888/
-stubs:
-  cart:
-    enable: true
+  flyway:
+    baseline-on-migrate: true
 kafka:
   topic:
     cancel-message: cancelMessage
     delivery-finish-message: deliveryFinishMessage
     notification: notification
     delivery-information: deliveryInformation
-delivery:
-  confirm-state: CONFIRMED
+service:
+  cart:
+    url: http://localhost:8888/
+stubs:
+  cart:
+    enable: true

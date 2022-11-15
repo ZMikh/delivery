@@ -14,8 +14,9 @@ import ru.mikhailova.repository.DeliveryRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.requireNonNull;
 
 @Service
 @Slf4j
@@ -59,7 +60,7 @@ public class CartServiceImpl implements CartService {
     private List<Cart> getCart(Long id) {
         ResponseEntity<CartResponseDtoList> responseEntity = restTemplate.getForEntity(cartUrl + CART_API + id,
                 CartResponseDtoList.class);
-        return  Objects.requireNonNull(responseEntity.getBody())
+        return  requireNonNull(responseEntity.getBody())
                 .getCarts()
                 .stream()
                 .map(mapper::toCart)
@@ -69,8 +70,13 @@ public class CartServiceImpl implements CartService {
     private List<Cart> generateCart() {
         List<Cart> carts = new ArrayList<>();
         Cart cart = new Cart();
-        cart.setProductName("headphones");
+        cart.setProductName("Headphones");
+        cart.setArticleNumber("TvH128D");
+        cart.setAmount(2L);
         cart.setPricePerItem(30D);
+        cart.setTotalCost(2L, 30D);
+        cart.setDescription("Wireless headphones");
+
         carts.add(cart);
         return carts;
     }

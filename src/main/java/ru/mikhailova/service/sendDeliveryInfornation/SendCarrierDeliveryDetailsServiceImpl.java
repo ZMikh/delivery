@@ -10,14 +10,14 @@ import ru.mikhailova.repository.DeliveryRepository;
 
 @Service
 @Slf4j
-public class SendDeliveryInformationServiceImpl implements SendDeliveryInformationService {
+public class SendCarrierDeliveryDetailsServiceImpl implements SendCarrierDeliveryDetailsService {
     private final DeliveryRepository repository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
     private final String notificationTopic;
 
-    public SendDeliveryInformationServiceImpl(DeliveryRepository repository,
-                                              KafkaTemplate<String, Object> kafkaTemplate,
-                                              @Value("${kafka.topic.notification}") String notificationTopic) {
+    public SendCarrierDeliveryDetailsServiceImpl(DeliveryRepository repository,
+                                                 KafkaTemplate<String, Object> kafkaTemplate,
+                                                 @Value("${kafka.topic.notification}") String notificationTopic) {
         this.repository = repository;
         this.kafkaTemplate = kafkaTemplate;
         this.notificationTopic = notificationTopic;

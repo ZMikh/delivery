@@ -48,7 +48,7 @@
       <bpmn:outgoing>Flow_0sgm0on</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_03y2roq" sourceRef="Event_1v5yib7" targetRef="Activity_09kksu5" />
-    <bpmn:sendTask id="Activity_09kksu5" name="Отправить уведомление" camunda:delegateExpression="${sendNotificationDelegate}">
+    <bpmn:sendTask id="Activity_09kksu5" name="Отправить уведомление" camunda:delegateExpression="${sendNotificationToConfirmDeliveryDelegate}">
       <bpmn:incoming>Flow_03y2roq</bpmn:incoming>
       <bpmn:outgoing>Flow_1essd0v</bpmn:outgoing>
     </bpmn:sendTask>
@@ -103,7 +103,7 @@
       <bpmn:outgoing>Flow_0iee9xk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0iee9xk" sourceRef="Gateway_0o8kjwb" targetRef="finishedState" />
-    <bpmn:sendTask id="Activity_0pqo40j" name="Отправить информацию о доставке курьером" camunda:delegateExpression="${sendDeliveryInformationDelegate}">
+    <bpmn:sendTask id="Activity_0pqo40j" name="Отправить информацию о доставке курьером" camunda:delegateExpression="${sendCarrierDeliveryDetailsDelegate}">
       <bpmn:incoming>Flow_0129q2t</bpmn:incoming>
       <bpmn:outgoing>Flow_0fcz8zj</bpmn:outgoing>
     </bpmn:sendTask>

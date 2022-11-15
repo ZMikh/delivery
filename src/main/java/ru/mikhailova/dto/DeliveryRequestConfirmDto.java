@@ -7,10 +7,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@ApiModel("Параметры запроса по подтверждению заказа")
+@ApiModel("Параметры запроса для подтверждения заказа")
 public class DeliveryRequestConfirmDto {
-    @ApiModelProperty("Статус доствки")
-    private String state;
+    @ApiModelProperty("Статус подтверждение доствки")
+    private String confirmationState;
     @ApiModelProperty("Адрес доставки")
     private String address;
     @ApiModelProperty("Получение заказа самовывозом")

@@ -46,23 +46,12 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     };
     private CartResponseDtoList carts;
 
-    private final String confirmState;
-    private final String cancelMessageTopic;
-    private final String deliveryFinishMessageTopic;
-    private final String notificationTopic;
-    private final String deliveryInformationTopic;
-
-    DeliveryIntegrationTest(@Value("${delivery.confirm-state}") String confirmState,
-                            @Value("${kafka.topic.cancel-message}") String cancelMessageTopic,
-                            @Value("${kafka.topic.delivery-finish-message}") String deliveryFinishMessageTopic,
-                            @Value("${kafka.topic.notification}") String notificationTopic,
-                            @Value("${kafka.topic.delivery-information}") String deliveryInformationTopic) {
-        this.confirmState = confirmState;
-        this.cancelMessageTopic = cancelMessageTopic;
-        this.deliveryFinishMessageTopic = deliveryFinishMessageTopic;
-        this.notificationTopic = notificationTopic;
-        this.deliveryInformationTopic = deliveryInformationTopic;
-    }
+    @Value("${kafka.topic.cancel-message}")
+    private String cancelMessageTopic;
+    @Value("${kafka.topic.delivery-finish-message}")
+    private String deliveryFinishMessageTopic;
+    @Value("${kafka.topic.notification}")
+    private String notificationTopic;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -98,7 +87,8 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckDeliveryConfirmationUserTask() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState(confirmState);
+        dto.setConfirmationState("CONFIRMED");
+        dto.setIsPickUp(false);
 
         DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
@@ -108,7 +98,8 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckDeliveryCancellationUserTask() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState("CANCELLED");
+        dto.setConfirmationState("CANCELLED");
+        dto.setIsPickUp(false);
 
         DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
@@ -118,7 +109,7 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckDeliveryIsPickedUpUserTask() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState(confirmState);
+        dto.setConfirmationState("CONFIRMED");
         dto.setIsPickUp(true);
         performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
@@ -171,25 +162,9 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void couldCheckSendDeliveryInformation() throws Exception {
-        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
-            consumer.subscribe(List.of("delivery_information"));
-
-            DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-            dto.setState(confirmState);
-            dto.setIsPickUp(false);
-
-            performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
-
-            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, deliveryInformationTopic, 2000);
-            assertThat(record.value()).isNotEmpty();
-        }
-    }
-
-    @Test
     void couldCheckReceiveMessageOfDeliveryFinish() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState(confirmState);
+        dto.setConfirmationState("CONFIRMED");
         dto.setIsPickUp(false);
         performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
@@ -212,8 +187,9 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckPaymentServiceTaskError() throws Exception {
         DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-        dto.setState(confirmState);
+        dto.setConfirmationState("CONFIRMED");
         dto.setDescription("some error");
+        dto.setIsPickUp(false);
 
         DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 

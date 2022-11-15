@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 public class CancelMessageListener {
     private final RuntimeService service;
 
-    @KafkaListener(topics = "${kafka.topic.cancel-message}", groupId = "delivery")
-    public void messageListener(JsonNode dto) throws JsonProcessingException {
+    @KafkaListener(topics = "${kafka.topic.cancel-message}", groupId = "${spring.kafka.consumer.group-id")
+    public void cancelMessageListener(JsonNode dto) throws JsonProcessingException {
         DeliveryMessageDto deliveryMessageDto = new ObjectMapper().treeToValue(dto, DeliveryMessageDto.class);
         log.info("New cancel message from {}", deliveryMessageDto);
 

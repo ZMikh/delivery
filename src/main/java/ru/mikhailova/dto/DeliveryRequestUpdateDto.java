@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
-@ApiModel("Параметры для запроса по обновлению доставки")
+@ApiModel("Параметры для запроса по обновлению параметров доставки")
 public class DeliveryRequestUpdateDto {
     @ApiModelProperty("Время доставки")
     private LocalDateTime deliveryTime;
