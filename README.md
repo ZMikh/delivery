@@ -4,7 +4,7 @@
 
 ```
 mvn package 
-docker compose up -d
+docker compose up
 ```
 
 **Конфигурация**
@@ -87,7 +87,7 @@ http://localhost:8080/swagger-ui.html#/
     - устанавливается после получения "cancel_message"
         - для записи message -
           ```docker exec --interactive --tty broker_delivery kafka-console-producer --bootstrap-server broker_delivery:9092 --topic cancelMessage```
-        - в message передается JSON e.g. ```{"id":3}```
+            - в message передается JSON e.g. ```{"id":3}```
     - при отправке GET запроса по id значение поля "state" соответствует **TECH_ERROR**
 
 **Используемые в проекте технологии**

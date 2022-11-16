@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.repository.DeliveryRepository;
 
-// TODO replace entity with dto
 @Service
 @Slf4j
 public class SendNotificationToConfirmDeliveryServiceImpl implements SendNotificationToConfirmDeliveryService {

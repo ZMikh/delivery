@@ -2,9 +2,6 @@ package ru.mikhailova.integration;
 
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.web.client.RestTemplate;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
@@ -37,8 +32,6 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     private DeliveryRepository repository;
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
-    @Autowired
-    private ConsumerFactory<String, JsonNode> consumerFactory;
     @MockBean
     protected RestTemplate restTemplate;
     private Delivery delivery;
@@ -50,11 +43,6 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     private String cancelMessageTopic;
     @Value("${kafka.topic.delivery-finish-message}")
     private String deliveryFinishMessageTopic;
-    @Value("${kafka.topic.notification}")
-    private String notificationTopic;
-    @Value("${kafka.topic.delivery-information}")
-    private String deliveryInformationTopic;
-
 
     @BeforeEach
     void setUp() throws Exception {
@@ -76,15 +64,6 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCreateDelivery() {
         assertThat(delivery.getState()).isEqualTo(DeliveryState.IN_PROCESSING);
-    }
-
-    @Test
-    void couldCheckSendNotificationDelivery() throws Exception {
-        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
-            consumer.subscribe(List.of(notificationTopic));
-            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, notificationTopic, 20000);
-            assertThat(record.value()).isNotEmpty();
-        }
     }
 
     @Test
@@ -197,32 +176,5 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
         DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
         assertThat(responseDto.getState()).isEqualTo(DeliveryState.PAYMENT_ERROR.toString());
-    }
-
-    @Test
-    void couldCheckSendDeliveryInformation() throws Exception {
-        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
-            consumer.subscribe(List.of(deliveryInformationTopic));
-
-            DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
-            dto.setConfirmationState("CONFIRMED");
-            dto.setIsPickUp(false);
-
-            performConfirmDeliveryInAnotherThread(dto);
-
-            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, deliveryInformationTopic, 10000);
-            assertThat(record.value()).isNotEmpty();
-        }
-    }
-
-    private void performConfirmDeliveryInAnotherThread(DeliveryRequestConfirmDto dto) {
-        new Thread(() -> {
-            try {
-                Thread.sleep(3000);
-                performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
     }
 }
