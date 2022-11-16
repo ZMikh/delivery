@@ -1,26 +1,11 @@
 version: '3'
 services:
-  postgres:
+  postgres_delivery:
     image: postgres:15-alpine
-    container_name: postgres-delivery
+    container_name: postgres_delivery
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-  delivery:
-    build:
-      context: .
-    container_name: delivery
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-      - broker_delivery
-    environment:
-      DATABASE_URL: "jdbc:postgresql://postgres:5432/"
-      DATABASE_USERNAME: "postgres"
-      DATABASE_PASSWORD: "postgres"
-      KAFKA_GROUP_ID: "delivery"
-      SPRING_KAFKA_BOOTSTRAP-SERVERS: "broker:9092"
   zookeeper_delivery:
     image: confluentinc/cp-zookeeper:7.0.1
     container_name: zookeeper_delivery
@@ -38,9 +23,24 @@ services:
       - zookeeper_delivery
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper_delivery:2181'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker_delivery:9092,PLAINTEXT_INTERNAL://broker_delivery:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  delivery:
+    build:
+      context: .
+    container_name: delivery
+    ports:
+      - "8080:8080"
+    depends_on:
+      - broker_delivery
+      - postgres_delivery
+    environment:
+      DATABASE_URL: "jdbc:postgresql://postgres_delivery:5432/"
+      DATABASE_USERNAME: "postgres"
+      DATABASE_PASSWORD: "postgres"
+      KAFKA_GROUP_ID: "delivery"
+      KAFKA_SERVER: "broker_delivery:9092"

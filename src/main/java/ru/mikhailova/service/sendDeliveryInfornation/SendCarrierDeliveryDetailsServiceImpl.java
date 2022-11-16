@@ -13,14 +13,14 @@ import ru.mikhailova.repository.DeliveryRepository;
 public class SendCarrierDeliveryDetailsServiceImpl implements SendCarrierDeliveryDetailsService {
     private final DeliveryRepository repository;
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final String notificationTopic;
+    private final String deliveryInformationTopic;
 
     public SendCarrierDeliveryDetailsServiceImpl(DeliveryRepository repository,
                                                  KafkaTemplate<String, Object> kafkaTemplate,
-                                                 @Value("${kafka.topic.notification}") String notificationTopic) {
+                                                 @Value("${kafka.topic.delivery-information}") String deliveryInformationTopic) {
         this.repository = repository;
         this.kafkaTemplate = kafkaTemplate;
-        this.notificationTopic = notificationTopic;
+        this.deliveryInformationTopic = deliveryInformationTopic;
     }
 
     @Transactional(readOnly = true)
@@ -28,7 +28,7 @@ public class SendCarrierDeliveryDetailsServiceImpl implements SendCarrierDeliver
     public void sendDeliveryInformation(Long id) {
         Delivery delivery = repository.findById(id).orElseThrow();
         log.info("Delivery information with id: {} is sent", delivery.getId());
-        kafkaTemplate.send(notificationTopic, delivery);
+        kafkaTemplate.send(deliveryInformationTopic, delivery);
     }
 }
 

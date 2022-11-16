@@ -52,6 +52,9 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     private String deliveryFinishMessageTopic;
     @Value("${kafka.topic.notification}")
     private String notificationTopic;
+    @Value("${kafka.topic.delivery-information}")
+    private String deliveryInformationTopic;
+
 
     @BeforeEach
     void setUp() throws Exception {
@@ -78,7 +81,7 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
     @Test
     void couldCheckSendNotificationDelivery() throws Exception {
         try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
-            consumer.subscribe(List.of("notification"));
+            consumer.subscribe(List.of(notificationTopic));
             ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, notificationTopic, 20000);
             assertThat(record.value()).isNotEmpty();
         }
@@ -194,5 +197,32 @@ class DeliveryIntegrationTest extends AbstractIntegrationTest {
         DeliveryResponseDto responseDto = performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
 
         assertThat(responseDto.getState()).isEqualTo(DeliveryState.PAYMENT_ERROR.toString());
+    }
+
+    @Test
+    void couldCheckSendDeliveryInformation() throws Exception {
+        try (Consumer<String, JsonNode> consumer = consumerFactory.createConsumer()) {
+            consumer.subscribe(List.of(deliveryInformationTopic));
+
+            DeliveryRequestConfirmDto dto = new DeliveryRequestConfirmDto();
+            dto.setConfirmationState("CONFIRMED");
+            dto.setIsPickUp(false);
+
+            performConfirmDeliveryInAnotherThread(dto);
+
+            ConsumerRecord<String, JsonNode> record = KafkaTestUtils.getSingleRecord(consumer, deliveryInformationTopic, 10000);
+            assertThat(record.value()).isNotEmpty();
+        }
+    }
+
+    private void performConfirmDeliveryInAnotherThread(DeliveryRequestConfirmDto dto) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+                performConfirmDelivery(delivery.getId(), dto, DeliveryResponseDto.class);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 }
