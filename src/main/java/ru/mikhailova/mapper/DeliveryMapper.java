@@ -3,11 +3,11 @@ package ru.mikhailova.mapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
+import ru.mikhailova.controller.dto.DeliveryRequestConfirmDto;
+import ru.mikhailova.controller.dto.DeliveryRequestCreateDto;
+import ru.mikhailova.controller.dto.DeliveryRequestUpdateDto;
+import ru.mikhailova.controller.dto.DeliveryResponseDto;
 import ru.mikhailova.domain.Delivery;
-import ru.mikhailova.dto.DeliveryRequestConfirmDto;
-import ru.mikhailova.dto.DeliveryRequestCreateDto;
-import ru.mikhailova.dto.DeliveryRequestUpdateDto;
-import ru.mikhailova.dto.DeliveryResponseDto;
 import ru.mikhailova.service.userTask.DeliveryConfirmInfo;
 import ru.mikhailova.service.userTask.DeliveryUpdateInfo;
 

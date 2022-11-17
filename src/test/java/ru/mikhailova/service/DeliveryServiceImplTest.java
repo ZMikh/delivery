@@ -2,7 +2,6 @@ package ru.mikhailova.service;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,11 +50,6 @@ class DeliveryServiceImplTest {
                 .build();
 
         service = new DeliveryServiceImpl(taskService, repository, runtimeService);
-    }
-
-    @AfterEach
-    void tearDown() {
-        repository.deleteAll();
     }
 
     @Test

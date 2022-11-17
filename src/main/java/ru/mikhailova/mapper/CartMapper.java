@@ -3,8 +3,8 @@ package ru.mikhailova.mapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
+import ru.mikhailova.controller.dto.CartResponseDto;
 import ru.mikhailova.domain.Cart;
-import ru.mikhailova.dto.CartResponseDto;
 
 @Component
 public class CartMapper {

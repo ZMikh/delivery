@@ -12,11 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.client.RestTemplate;
+import ru.mikhailova.controller.dto.*;
 import ru.mikhailova.domain.Delivery;
 import ru.mikhailova.domain.DeliveryState;
-import ru.mikhailova.dto.*;
-import ru.mikhailova.listener.DeliveryFinishDto;
-import ru.mikhailova.listener.DeliveryMessageDto;
+import ru.mikhailova.listener.dto.DeliveryFinishDto;
+import ru.mikhailova.listener.dto.DeliveryMessageDto;
 import ru.mikhailova.repository.DeliveryRepository;
 
 import java.time.LocalDateTime;
