@@ -30,7 +30,7 @@ http://localhost:8080/swagger-ui.html#/
 Согласно Camunda BPM в проекте определены следующие Event ID:
 
 - ```newState```
-    - стартовоое событие
+    - стартовое событие
 
 - ```inProcessingState```
     - заказ принят в обработку
@@ -64,11 +64,11 @@ http://localhost:8080/swagger-ui.html#/
                 - **отправлена информация** о доставке курьером
                     - для чтения message из topic выполняется команда в терминале
                       ```docker exec --interactive --tty broker_delivery kafka-console-consumer --bootstrap-server broker_delivery:9092 --topic deliveryInformation --from-beginning```
-                        - в message передается JSON e.g. ```{"id":3}```
+                        - message передается в формате JSON, e.g. ```{"id":3}```
                 - **получена информация** о завершении доставки по message "delivery_finish_message"
                     - для записи message - 
                       ```docker exec --interactive --tty broker_delivery kafka-console-producer --bootstrap-server broker_delivery:9092 --topic deliveryFinishMessage```
-                        - в message передается JSON e.g. ```{"id":3}```
+                        - message передается в формате JSON, e.g. ```{"id":3}```
                     - для чтения message - 
                       ```docker exec --interactive --tty broker_delivery kafka-console-consumer --bootstrap-server broker_delivery:9092 --topic deliveryFinishMessage --from-beginning```
 
@@ -83,11 +83,11 @@ http://localhost:8080/swagger-ui.html#/
     - при отправке GET запроса по id значение поля "state" соответствует **CLIENT_CANCELLATION**
 
 - ```techErrorState```
-    - заказ отменен по тех причинам
+    - заказ отменен по техническим причинам
     - устанавливается после получения "cancel_message"
         - для записи message -
           ```docker exec --interactive --tty broker_delivery kafka-console-producer --bootstrap-server broker_delivery:9092 --topic cancelMessage```
-            - в message передается JSON e.g. ```{"id":3}```
+            - message передается в формате JSON, e.g. ```{"id":3}```
     - при отправке GET запроса по id значение поля "state" соответствует **TECH_ERROR**
 
 **Используемые в проекте технологии**
