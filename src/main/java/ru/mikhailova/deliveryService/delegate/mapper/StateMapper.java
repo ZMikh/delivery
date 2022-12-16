@@ -1,4 +1,4 @@
-package ru.mikhailova.deliveryService.mapper;
+package ru.mikhailova.deliveryService.delegate.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.mikhailova.deliveryService.domain.DeliveryState;
