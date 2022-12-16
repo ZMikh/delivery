@@ -3,7 +3,7 @@ package ru.mikhailova.deliveryService.service.cart;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
- * Сервис корзины покаупателя
+ * Сервис корзины покупателя
  */
 public interface CartService {
     /**

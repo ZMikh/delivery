@@ -9,7 +9,7 @@ public interface DeliveryChangeStateService {
     /**
      * Сменить событие
      * @param deliveryState статус доставки
-     * @param id идентификатор доставик
+     * @param id идентификатор доставки
      */
     void changeDeliveryState(DeliveryState deliveryState, Long id);
 }
